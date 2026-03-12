@@ -1,13 +1,21 @@
 #include <stdio.h>
-//#include <math.h>
+#include <assert.h>
 #include <complex.h>
 #include <time.h>
 #include "state.h"
+
+#if defined(NDEBUG) //Проверка типа сборки
+#define ASSERTION "disabled"
+#else
+#define ASSERTION "enabled"
+#endif
 
 int main(void) //Мейн
 {
     clock_t runtimer = clock(); //Время старта
     FILE *errorlog = fopen("errorlog.txt","w"); //Файл с логами
+
+    fprintf(errorlog,"Asserts - %s\n",ASSERTION); //Дебаг или нет
 
     State state = {0}; //Память состояний
 
@@ -57,9 +65,12 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    get_start_amp(&state);
+    get_start_amp(&state); //Получение стартового состояния
 
-    printf("n - %d\nN - %d\ncount - %d\namp_idx - %d\namp_r - %lf\namp_i - %lf\n",state.n,state.N,state.amps.n,state.amps.arr[0].idx,creal(state.amps.arr[0].amplitude),cimag(state.amps.arr[0].amplitude));
+    //Если летит, то ебись оно конём
+    assert((state.n == n && state.N == N && state.amps.n == 1 && state.amps.arr[0].idx == 0 && creal(state.amps.arr[0].amplitude) == 1 && cimag(state.amps.arr[0].amplitude) == 0));
+
+    
 
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
     fclose(errorlog);
