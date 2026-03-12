@@ -100,7 +100,7 @@ int read_amp_by_idx(const State *state, int idx, complex double *return_amp)
         return 1;
     }
 
-    printf("[DBG] i не найден! | i - %d idx - %d\n",i,idx);
+    // printf("[DBG] i не найден! | i - %d idx - %d\n",i,idx);
     return 0; //Не нашли, значит 0
 }
 
