@@ -21,3 +21,11 @@ void get_start_amp(State *state)
 
     Amp_Vec_push(&state->amps,temp);
 }
+
+
+void clear_state(State *state)
+{
+    state->n = state->N = 0;
+
+    Amp_Vec_destroy(&state->amps);
+}

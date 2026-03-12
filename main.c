@@ -70,8 +70,8 @@ int main(void) //Мейн
     //Если летит, то ебись оно конём
     assert((state.n == n && state.N == N && state.amps.n == 1 && state.amps.arr[0].idx == 0 && creal(state.amps.arr[0].amplitude) == 1 && cimag(state.amps.arr[0].amplitude) == 0));
 
-    
 
+    clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
     fclose(errorlog);
     return 0; //Успешное завершение программы

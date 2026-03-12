@@ -21,3 +21,5 @@ typedef struct state //структура хранения состояний
 void init_state(State *state, int n, int N); //Инициализация хранилища состояний
 
 void get_start_amp(State *state); //Создание первой амплитуды
+
+void clear_state(State *state); //Чистка структуры

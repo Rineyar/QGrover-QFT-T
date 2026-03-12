@@ -91,34 +91,6 @@ void CAT(NAME,_resize)(NAME *vec, int newCnt, TYPE fill)
     } else {
         vec->n = newCnt;
     }
-
-    /*
-    TYPE *temp = malloc(vec->n * sizeof(TYPE));
-
-    for(int i = 0; i < vec->n; i++)
-    {
-        temp[i] = vec->arr[i];
-    }
-
-    free(vec->arr);
-
-    vec->arr = malloc(newCnt * sizeof(TYPE));
-
-    for(int i = 0; i < newCnt; i++)
-    {
-        if(i < vec->n)
-        {
-            vec->arr[i] = temp[i];
-        } else {
-            vec->arr[i] = fill;
-        }
-    }
-
-    vec->n = newCnt;
-    vec->cap = newCnt;
-
-    free(temp);
-    */
 }
 
 // inserts elements [arr[0]], [arr[1]], [arr[2]], ..., [arr[num-1]]
@@ -142,29 +114,6 @@ void CAT(NAME,_insert)(NAME *vec, int where, TYPE *arr, int num)
     memcpy(vec->arr + where, arr, num * sizeof(TYPE));
 
     vec->n += num;
-
-    /*
-    TYPE *temp = malloc((vec->n - where) * sizeof(TYPE));
-
-    for(int i = where; i < vec->n; i++)
-    {
-        temp[i - where] = vec->arr[i];
-    }
-
-    for(int i = 0; i < num; i++)
-    {
-        vec->arr[where + i] = arr[i];
-    }
-
-    for(int i = 0; i < vec->n - where; i++)
-    {
-        vec->arr[where + num + i] = temp[i];
-    }
-
-    vec->n += num;
-
-    free(temp);
-    */
 }
 
 // removes elements [vec->arr[k]] for k = [where], [where+1], ..., [where+num-1]
@@ -179,22 +128,6 @@ void CAT(NAME,_erase)(NAME *vec, int where, int num)
     memmove(vec->arr + where, vec->arr + where + num, (vec->n - where - num) * sizeof(TYPE));
 
     vec->n -= num;
-
-    /*
-    TYPE *temp = malloc((vec->n - where - num) * sizeof(TYPE));
-
-    for(int i = where + num; i < vec->n; i++)
-    {
-        temp[i - where - num] = vec->arr[i];
-    }
-
-    for(int i = 0; i < vec->n - where - num; i++)
-    {
-        vec->arr[i + where] = temp[i];
-    }
-
-    vec->n -= num;
-    */
 }
 
 
