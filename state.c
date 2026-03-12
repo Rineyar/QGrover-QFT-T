@@ -1,6 +1,6 @@
 #include "state.h"
 
-void init_state(State *state, short n, long int N)
+void init_state(State *state, int n, int N)
 {
     state->N = N;
     state->n = n;

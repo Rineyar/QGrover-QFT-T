@@ -34,8 +34,8 @@ int main(void) //Мейн
 
     State state = {0}; //Память состояний
 
-    short n = 0; //Кол-во кубитов 1-20
-    if(scanf("%hi",&n) != 1) //Считать
+    int n = 0; //Кол-во кубитов 1-20
+    if(scanf("%d",&n) != 1) //Считать
     {
         fprintf(errorlog,"Ошибка чтения n!\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
@@ -51,7 +51,7 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    long int N = 1L << n; //Вычисление N
+    int N = 1L << n; //Вычисление N
 
     init_state(&state,n,N); //Передача n/N в состояния
 
@@ -63,8 +63,8 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    long int x0 = 0; //Искомый элемент
-    if(scanf("%ld",&x0) != 1) //Считать
+    int x0 = 0; //Искомый элемент
+    if(scanf("%d",&x0) != 1) //Считать
     {
         fprintf(errorlog,"Ошибка чтения x0\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
