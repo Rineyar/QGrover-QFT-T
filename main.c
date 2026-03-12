@@ -1,8 +1,8 @@
+#include "types.h"
+#include "functions.h"
 #include <stdio.h>
 #include <assert.h>
-#include <complex.h>
 #include <time.h>
-#include "state.h"
 
 #if defined(NDEBUG) //Проверка типа сборки
 #define ASSERTION "disabled"
@@ -78,6 +78,26 @@ int main(void) //Мейн
 
     //Если летит, то ебись оно конём
     assert((state.n == n && state.N == N && state.amps.n == 1 && state.amps.arr[0].idx == 0 && creal(state.amps.arr[0].amplitude) == 1 && cimag(state.amps.arr[0].amplitude) == 0));
+
+    // set_amp_by_idx(&state,13,1);
+
+    // set_amp_by_idx(&state,-3,2);
+
+    // complex double temp = 0;
+
+    // read_amp_by_idx(&state,1,&temp);
+
+    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
+
+    // read_amp_by_idx(&state,2,&temp);
+
+    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
+
+    // oracle(&state,x0);
+
+    // read_amp_by_idx(&state,x0,&temp);
+
+    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
 
     clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы

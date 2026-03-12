@@ -1,1 +1,0 @@
-gcc -DNDEBUG main.c state.c -o QuantAlg

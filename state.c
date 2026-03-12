@@ -1,6 +1,4 @@
 #include "state.h"
-#include <time.h>
-#include <complex.h>
 
 #define TYPE Amp
 #define NAME Amp_Vec
@@ -96,12 +94,13 @@ int read_amp_by_idx(const State *state, int idx, complex double *return_amp)
 
     int i = search_amp_by_idx(state,idx); //Индекс амплитуды
 
-    if(i != 2) //Нашли
+    if(i != -2) //Нашли
     {
         *return_amp = state->amps.arr[i].amplitude; //Вернули
         return 1;
     }
 
+    printf("[DBG] i не найден! | i - %d idx - %d\n",i,idx);
     return 0; //Не нашли, значит 0
 }
 
