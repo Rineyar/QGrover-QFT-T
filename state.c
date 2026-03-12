@@ -124,6 +124,7 @@ int remove_amp_by_i(State *state, int i)
     return 1;
 }
 
+//ВВЕСТИ eps (точность вычислений 0я)
 int is_amp_null(const complex double amp) //Проверка на 0
 {
     if(creal(amp) == 0 && cimag(amp) == 0) //0?
