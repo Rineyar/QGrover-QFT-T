@@ -20,6 +20,8 @@ typedef struct state //структура хранения состояний
 
 void init_state(State *state, int n, int N); //Инициализация хранилища состояний
 
-void get_start_amp(State *state); //Создание первой амплитуды
+void set_start_state(State *state); //Получение 0о квантового состояния (|0⟩)
 
 void clear_state(State *state); //Чистка структуры
+
+int search_amp_by_idx(State state, int idx); //Поиск амплитуды по её индексу

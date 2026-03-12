@@ -12,20 +12,34 @@ void init_state(State *state, int n, int N)
     Amp_Vec_init(&state->amps);
 }
 
-void get_start_amp(State *state)
+void set_start_state(State *state)
 {
     Amp temp = {0};
 
     temp.amplitude = 1;
     temp.idx = 0;
 
+    state->amps.n = 0;
+
     Amp_Vec_push(&state->amps,temp);
 }
-
 
 void clear_state(State *state)
 {
     state->n = state->N = 0;
 
     Amp_Vec_destroy(&state->amps);
+}
+
+int search_amp_by_idx(State state, int idx)
+{
+    for(int i = 0; i < state.amps.n; i++)
+    {
+        if(state.amps.arr[i].idx == idx)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }

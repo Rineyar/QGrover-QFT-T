@@ -22,6 +22,7 @@ int main(void) //Мейн
     int n = 0; //Кол-во кубитов 1-20
     if(scanf("%d",&n) != 1) //Считать
     {
+        clear_state(&state); //Чистка состояний
         fprintf(errorlog,"Ошибка чтения n!\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
         fclose(errorlog);
@@ -30,6 +31,7 @@ int main(void) //Мейн
 
     if(n <= 0 || n > 20) //Проверка ввода
     {
+        clear_state(&state); //Чистка состояний
         fprintf(errorlog,"Некорректное кол-во кубитов!\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
         fclose(errorlog);
@@ -42,6 +44,7 @@ int main(void) //Мейн
 
     if(state.n != n || state.N != N) //Проверка передечи n/N в состояния
     {
+        clear_state(&state); //Чистка состояний
         fprintf(errorlog,"Ошибка передачи n/N в состояния\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
         fclose(errorlog);
@@ -51,6 +54,7 @@ int main(void) //Мейн
     int x0 = 0; //Искомый элемент
     if(scanf("%d",&x0) != 1) //Считать
     {
+        clear_state(&state); //Чистка состояний
         fprintf(errorlog,"Ошибка чтения x0\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
         fclose(errorlog);
@@ -59,17 +63,17 @@ int main(void) //Мейн
 
     if(x0 < 0 || x0 >= N) //Проверка ввода
     {
+        clear_state(&state); //Чистка состояний
         fprintf(errorlog,"Некорректный искомый элемент\n"); //Вывод ошибки
         fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
         fclose(errorlog);
         return 1; //Аварийное завершение
     }
 
-    get_start_amp(&state); //Получение стартового состояния
+    set_start_state(&state); //Получение стартового состояния
 
     //Если летит, то ебись оно конём
     assert((state.n == n && state.N == N && state.amps.n == 1 && state.amps.arr[0].idx == 0 && creal(state.amps.arr[0].amplitude) == 1 && cimag(state.amps.arr[0].amplitude) == 0));
-
 
     clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
