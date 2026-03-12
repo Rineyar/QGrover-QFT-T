@@ -60,9 +60,20 @@ int set_amp_by_idx(State *state, complex double amp, int idx) //Установи
 
     int i = search_amp_by_idx(state,idx); //Получение индекса амплитуды
 
+    if(creal(amp) == 0 && cimag(amp) == 0) //Если новая амплитуда 0
+    {
+        if(i != -2) //И есть куда вставить
+        {
+            remove_amp_by_i(state,i); //Удаляем
+        }
+
+        return 3; //Закончили нулём
+    }
+
     if(i != -2) //Если такая есть
     {
         state->amps.arr[i].amplitude = amp; //Заменить
+
         return 1; //Успешно изменена
     } //Не нашли
 
@@ -76,7 +87,7 @@ int set_amp_by_idx(State *state, complex double amp, int idx) //Установи
     return 2; //Добавлена новая
 }
 
-complex double read_amp_by_idx(const State *state, int idx)
+int read_amp_by_idx(const State *state, int idx, complex double *return_amp)
 {
     if(idx < 0 || idx >= state->N) //Если индекс некорректен
     {
@@ -87,8 +98,28 @@ complex double read_amp_by_idx(const State *state, int idx)
 
     if(i != 2) //Нашли
     {
-        return state->amps.arr[i].amplitude; //Вернули
+        *return_amp = state->amps.arr[i].amplitude; //Вернули
+        return 1;
     }
 
     return 0; //Не нашли, значит 0
+}
+
+int remove_amp_by_i(State *state, int i)
+{
+    if(i < 0 || i >= state->amps.n) //Некорретный индекс
+    {
+        return -1;
+    }
+
+    if(state->amps.n == 1) //Если элемент единственный
+    {
+        state->amps.n = 0; //Чистка
+        return 2; //Возврат кода
+    } //Если не единственный
+
+    state->amps.arr[i] = state->amps.arr[state->amps.n-1]; //Конечный поставить в пустой слот
+    state->amps.n--; //Размер-
+
+    return 1;
 }
