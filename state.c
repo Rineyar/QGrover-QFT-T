@@ -1,5 +1,4 @@
 #include "state.h"
-#include <stdlib.h>
 
 void init_state(State *state, short n, long int N)
 {
@@ -7,7 +6,10 @@ void init_state(State *state, short n, long int N)
     state->n = n;
 
     Amp_Vec_init(&state->amps);
+}
 
+void get_start_amp(State *state)
+{
     Amp temp = {0};
 
     temp.amplitude = 1;
@@ -15,4 +17,3 @@ void init_state(State *state, short n, long int N)
 
     Amp_Vec_push(&state->amps,temp);
 }
-
