@@ -60,7 +60,7 @@ int set_amp_by_idx(State *state, complex double amp, int idx) //Установи
 
     int i = search_amp_by_idx(state,idx); //Получение индекса амплитуды
 
-    if(creal(amp) == 0 && cimag(amp) == 0) //Если новая амплитуда 0
+    if(is_amp_null(amp)) //Если новая амплитуда 0
     {
         if(i != -2) //И есть куда вставить
         {
@@ -122,4 +122,14 @@ int remove_amp_by_i(State *state, int i)
     state->amps.n--; //Размер-
 
     return 1;
+}
+
+int is_amp_null(const complex double amp) //Проверка на 0
+{
+    if(creal(amp) == 0 && cimag(amp) == 0) //0?
+    {
+        return 1; //Да
+    }
+
+    return 0; //Нет
 }
