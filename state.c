@@ -1,5 +1,9 @@
 #include "state.h"
 
+#define TYPE Amp
+#define NAME Amp_Vec
+#include "vector/array_def.h"
+
 void init_state(State *state, int n, int N)
 {
     state->N = N;

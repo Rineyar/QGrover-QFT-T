@@ -1,31 +1,8 @@
 #include <stdio.h>
 //#include <math.h>
-//#include <complex.h>
+#include <complex.h>
 #include <time.h>
-#include "state.h"  
-
-/*
-__int128_t fastpow_mod(__int128_t a, __int128_t e, __int128_t mod) //быстрое возведение в степень на принципе бинарого сдвига
-{
-    __int128_t r = 1; //результат
-    
-    a %= mod; //возводимое
-
-    while(e > 0)
-    {
-        if(e & 1) //проверка чётности
-        {
-            r = (r*a)%mod; //работа с нечётной степенью
-        }
-
-        a = (a*a)%mod; //работа с чётной степенью
-
-        e >>= 1; //деление на 2
-    }
-
-    return r; //вывод
-}
-*/
+#include "state.h"
 
 int main(void) //Мейн
 {
@@ -80,8 +57,11 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
+    get_start_amp(&state);
 
+    printf("n - %d\nN - %d\ncount - %d\namp_idx - %d\namp_r - %lf\namp_i - %lf\n",state.n,state.N,state.amps.n,state.amps.arr[0].idx,creal(state.amps.arr[0].amplitude),cimag(state.amps.arr[0].amplitude));
+
+    fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
     fclose(errorlog);
     return 0; //Успешное завершение программы
 }
