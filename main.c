@@ -10,10 +10,14 @@
 #define ASSERTION "enabled"
 #endif
 
+FILE *errorlog = NULL; //Файл с логами
+clock_t runtimer = 0; //Время старта
+
 int main(void) //Мейн
 {
-    clock_t runtimer = clock(); //Время старта
-    FILE *errorlog = fopen("errorlog.txt","w"); //Файл с логами
+    errorlog = fopen("errorlog.txt","w");
+
+    runtimer = clock();
 
     fprintf(errorlog,"Asserts - %s\n",ASSERTION); //Дебаг или нет
 
