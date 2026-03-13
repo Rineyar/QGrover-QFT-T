@@ -1,8 +1,10 @@
 #include "state.h"
-
+#include "math.h"
 #define TYPE Amp
 #define NAME Amp_Vec
 #include "vector/array_def.h"
+
+#define EPS 1e-10
 
 void init_state(State *state, int n, int N) //Инициализация памяти
 {
@@ -123,10 +125,9 @@ int remove_amp_by_i(State *state, int i)
     return 1;
 }
 
-//ВВЕСТИ eps (точность вычислений 0я)
 int is_amp_null(const complex double amp) //Проверка на 0
 {
-    if(creal(amp) == 0 && cimag(amp) == 0) //0?
+    if(creal(amp)*creal(amp)+cimag(amp)*cimag(amp) < EPS*EPS) //0? //(creal(amp) == 0 && cimag(amp) == 0) //creal(amp)^2+cimag(amp)^2 < EPS^2 //cabs(amp) < EPS
     {
         return 1; //Да
     }
