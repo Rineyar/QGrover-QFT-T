@@ -42,7 +42,7 @@ void diffusion(State *state) //Диффузирование суперпозиц
         mean += state->amps.arr[i].amplitude; //Сумма
     }
 
-    mean /= state->amps.n; //Делим на кол-во
+    mean /= state->N; //Делим на кол-во
 
     for(int i = 0; i < state->amps.n; i++) //Применяем к каждому
     {
