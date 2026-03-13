@@ -82,11 +82,39 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    // set_start_state(&state); //Получение стартового состояния
+    set_start_state(&state); //Получение стартового состояния
 
-    // set_uniform_superposition(&state); //Получение универсальной суперпозиции
+    set_uniform_superposition(&state); //Получение универсальной суперпозиции
 
-    // complex double out = 0;
+    complex double out = 0;
+
+    for(int i = 0; i < state.N; i++)
+    {
+        read_amp_by_idx(&state,i,&out);
+
+        printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
+    }
+
+    read_amp_by_idx(&state,x0,&out);
+
+    printf("%lf +i%lf\n",creal(out),cimag(out));
+
+    grover_alg(&state,x0);
+
+    read_amp_by_idx(&state,x0,&out);
+
+    printf("%lf +i%lf\n",creal(out),cimag(out));
+
+    for(int i = 0; i < state.N; i++)
+    {
+        read_amp_by_idx(&state,i,&out);
+
+        printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
+    }
+
+    read_amp_by_idx(&state,x0,&out);
+
+    printf("P(x) - %lf\n",cabs(out)*cabs(out));
 
     // read_amp_by_idx(&state,4,&out);
 

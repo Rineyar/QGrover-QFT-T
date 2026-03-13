@@ -1,1 +1,1 @@
-gcc main.c state.c gates.c -o QuantAlg
+gcc main.c state.c gates.c grover.c -o QuantAlg
