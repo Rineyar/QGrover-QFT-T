@@ -82,30 +82,27 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    set_start_state(&state); //Получение стартового состояния
+    // set_start_state(&state); //Получение стартового состояния
 
-    //Если летит, то ебись оно конём
-    assert((state.n == n && state.N == N && state.amps.n == 1 && state.amps.arr[0].idx == 0 && creal(state.amps.arr[0].amplitude) == 1 && cimag(state.amps.arr[0].amplitude) == 0));
+    // set_uniform_superposition(&state); //Получение универсальной суперпозиции
 
-    // set_amp_by_idx(&state,13,1);
+    // complex double out = 0;
 
-    // set_amp_by_idx(&state,-3,2);
+    // read_amp_by_idx(&state,4,&out);
 
-    // complex double temp = 0;
+    // printf("%lf +i%lf\n",creal(out),cimag(out));
 
-    // read_amp_by_idx(&state,1,&temp);
-
-    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
-
-    // read_amp_by_idx(&state,2,&temp);
-
-    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
+    // printf("%lf +i%lf\n",creal(state.amps.arr[x0].amplitude),cimag(state.amps.arr[x0].amplitude));
 
     // oracle(&state,x0);
 
-    // read_amp_by_idx(&state,x0,&temp);
+    // diffusion(&state);
 
-    // printf("%lf+%lfi\n",creal(temp),cimag(temp));
+    // read_amp_by_idx(&state,4,&out);
+
+    // printf("%lf +i%lf\n",creal(out),cimag(out));
+
+    // printf("%lf +i%lf\n",creal(state.amps.arr[x0].amplitude),cimag(state.amps.arr[x0].amplitude));
 
     clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
