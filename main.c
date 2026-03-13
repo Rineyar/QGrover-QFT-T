@@ -54,6 +54,10 @@ int main(void) //Мейн
 
     init_state(&state,n,N); //Передача n/N в состояния
 
+    fprintf(errorlog,"Init-State: n - %d N - %d sn - %d sN - %d | ",n,N,state.n,state.N); //Залить инит в логи
+    fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
+    assert(state.n == n && state.N == N); //Если косяк, отрубит сразу
+
     if(state.n != n || state.N != N) //Проверка передечи n/N в состояния
     {
         clear_state(&state); //Чистка состояний
@@ -88,12 +92,12 @@ int main(void) //Мейн
 
     complex double out = 0;
 
-    for(int i = 0; i < state.N; i++)
-    {
-        read_amp_by_idx(&state,i,&out);
+    // for(int i = 0; i < state.N; i++)
+    // {
+    //     read_amp_by_idx(&state,i,&out);
 
-        printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
-    }
+    //     printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
+    // }
 
     read_amp_by_idx(&state,x0,&out);
 
@@ -105,12 +109,12 @@ int main(void) //Мейн
 
     printf("%lf +i%lf\n",creal(out),cimag(out));
 
-    for(int i = 0; i < state.N; i++)
-    {
-        read_amp_by_idx(&state,i,&out);
+    // for(int i = 0; i < state.N; i++)
+    // {
+    //     read_amp_by_idx(&state,i,&out);
 
-        printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
-    }
+    //     printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
+    // }
 
     read_amp_by_idx(&state,x0,&out);
 
