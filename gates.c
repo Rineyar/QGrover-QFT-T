@@ -15,3 +15,19 @@ int oracle(State *state, int x0) //Оракул, он меняет + на - и �
     state->amps.arr[i].amplitude = -(state->amps.arr[i].amplitude); //Поменять
     return 1; //Успех
 }
+
+void set_uniform_superposition(State *state)
+{
+    state->amps.n = 0;
+
+    Amp temp = {0};
+
+    temp.amplitude = 1/sqrt(state->N);
+    temp.idx = 0;
+
+    for(int i = 0; i < state->N; i++)
+    {
+        temp.idx = i;
+        Amp_Vec_push(&state->amps,temp);
+    }
+}

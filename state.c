@@ -1,5 +1,4 @@
 #include "state.h"
-#include "math.h"
 #define TYPE Amp
 #define NAME Amp_Vec
 #include "vector/array_def.h"
