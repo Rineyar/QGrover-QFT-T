@@ -56,7 +56,6 @@ int main(void) //Мейн
 
     fprintf(errorlog,"Init-State: n - %d N - %d sn - %d sN - %d | ",n,N,state.n,state.N); //Залить инит в логи
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-    assert(state.n == n && state.N == N); //Если косяк, отрубит сразу
 
     if(state.n != n || state.N != N) //Проверка передечи n/N в состояния
     {
@@ -86,55 +85,7 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
-    set_start_state(&state); //Получение стартового состояния
 
-    set_uniform_superposition(&state); //Получение универсальной суперпозиции
-
-    complex double out = 0;
-
-    // for(int i = 0; i < state.N; i++)
-    // {
-    //     read_amp_by_idx(&state,i,&out);
-
-    //     printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
-    // }
-
-    read_amp_by_idx(&state,x0,&out);
-
-    printf("%lf +i%lf\n",creal(out),cimag(out));
-
-    grover_alg(&state,x0);
-
-    read_amp_by_idx(&state,x0,&out);
-
-    printf("%lf +i%lf\n",creal(out),cimag(out));
-
-    // for(int i = 0; i < state.N; i++)
-    // {
-    //     read_amp_by_idx(&state,i,&out);
-
-    //     printf("%d: %lf +i%lf\n",i,creal(out),cimag(out));
-    // }
-
-    read_amp_by_idx(&state,x0,&out);
-
-    printf("P(x) - %lf\n",cabs(out)*cabs(out));
-
-    // read_amp_by_idx(&state,4,&out);
-
-    // printf("%lf +i%lf\n",creal(out),cimag(out));
-
-    // printf("%lf +i%lf\n",creal(state.amps.arr[x0].amplitude),cimag(state.amps.arr[x0].amplitude));
-
-    // oracle(&state,x0);
-
-    // diffusion(&state);
-
-    // read_amp_by_idx(&state,4,&out);
-
-    // printf("%lf +i%lf\n",creal(out),cimag(out));
-
-    // printf("%lf +i%lf\n",creal(state.amps.arr[x0].amplitude),cimag(state.amps.arr[x0].amplitude));
 
     clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
