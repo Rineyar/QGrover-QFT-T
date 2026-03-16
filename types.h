@@ -1,6 +1,8 @@
 #pragma once
 
 #include <complex.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 typedef struct amp //Структура для хранения амплитуд
 {

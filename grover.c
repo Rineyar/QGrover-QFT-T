@@ -1,6 +1,4 @@
 #include "grover.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 int grover_step(State *state, int x0) //Шаг алгоритма гровера
 {
