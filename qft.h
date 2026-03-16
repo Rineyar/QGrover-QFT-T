@@ -1,5 +1,5 @@
 #include "types.h"
 
-int qft(State *state); //Квантовое преобразование Фурье
+void qft(State *state); //Квантовое преобразование Фурье
 
-int iqft(State *state); //Обртное квантовое преобразование Фурье
+void iqft(State *state); //Обртное квантовое преобразование Фурье

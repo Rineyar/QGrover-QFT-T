@@ -39,24 +39,72 @@ static void butterfly(State *state, int left, int right, complex double w)
     state->amps.arr[right].amplitude = u - v;
 }
 
-static void linecalc(State *state, int start, int len)
+static void linecalc(State *state, int start, int len, complex double wlen)
 {
     complex double w = 1;
 
-    for(int i = 0; i < len/2-1; i++)
+    for(int i = 0; i < len/2; i++)
     {
         butterfly(state,start+i,start+i+len/2,w);
 
-        w *= cpow(M_E,(2*M_PI*I/len));
+        w *= wlen;
     }
 }
 
-int qft(State *state)
+static void fft_step(State *state, int len, int sign)
 {
+    complex double wlen = 0;
 
+    if(sign < 0)
+    {
+        wlen = cexp(-2*M_PI*I/len);
+    } else if(sign > 0)
+    {
+        wlen = cexp(2*M_PI*I/len);
+    }
+
+    for(int i = 0; i < state->N/len; i++)
+    {
+        linecalc(state,i*len,len,wlen);
+    }
 }
 
-int iqft(State *state)
+static void fft(State *state, int sign)
 {
+    int len = 2;
 
+    while(len <= state->N)
+    {
+        fft_step(state,len,sign);
+
+        len *= 2;
+    }
+}
+
+static void normalize(State *state)
+{
+    complex double k = 1/sqrt(state->N);
+
+    for(int i = 0; i < state->amps.n; i++)
+    {
+        state->amps.arr[i].amplitude *= k;
+    }
+}
+
+void qft(State *state)
+{
+    reverse_amps_by_bit(state);
+
+    fft(state,1);
+
+    normalize(state);
+}
+
+void iqft(State *state)
+{
+    reverse_amps_by_bit(state);
+
+    fft(state,-1);
+
+    normalize(state);
 }
