@@ -1,1 +1,1 @@
-gcc -DNDEBUG main.c state.c gates.c grover.c -o QuantAlg
+gcc -DNDEBUG main.c state.c gates.c grover.c measure.c qft.c -o QuantAlg

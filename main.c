@@ -85,7 +85,21 @@ int main(void) //Мейн
         return 1; //Аварийное завершение
     }
 
+    set_uniform_superposition(&state);
 
+    for(int i = 0; i < state.amps.n; i++)
+    {
+        printf("%d %lf + i%lf\n",i,creal(state.amps.arr[i].amplitude),cimag(state.amps.arr[i].amplitude));
+    }
+
+    printf("POST QFT:\n");
+
+    qft(&state);
+
+    for(int i = 0; i < state.amps.n; i++)
+    {
+        printf("%d %lf + i%lf\n",i,creal(state.amps.arr[i].amplitude),cimag(state.amps.arr[i].amplitude));
+    }
 
     clear_state(&state); //Чистка состояний
     fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы

@@ -1,6 +1,6 @@
 #include "qft.h"
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
 
 static int bit_reverse_by_idx(int idx, int n) //Разворот битов индекса
 {
@@ -109,3 +109,44 @@ void iqft(State *state) //Аналогично, но у фазы другой з
 
     normalize(state);
 }
+
+// int main(void)
+// {
+//     State state;
+//     state.amps.arr= malloc(32*sizeof(Amp));
+
+//     state.N = 32;
+//     state.n = 5;
+
+//     state.amps.n = 32;
+//     state.amps.cap = 32;
+
+//     for(int i = 0; i < 32; i++)
+//     {
+//         state.amps.arr[i].amplitude = i+1;
+//         state.amps.arr[i].idx = i;
+//     }
+
+//     for(int i = 0; i < state.amps.n; i++)
+//     {
+//         printf("%d %lf + i%lf\n",i,creal(state.amps.arr[i].amplitude),cimag(state.amps.arr[i].amplitude));
+//     }
+
+//     printf("POST QFT:\n");
+
+//     qft(&state);
+
+//     for(int i = 0; i < state.amps.n; i++)
+//     {
+//         printf("%d %lf + i%lf\n",i,creal(state.amps.arr[i].amplitude),cimag(state.amps.arr[i].amplitude));
+//     }
+
+//     iqft(&state);
+
+//     for(int i = 0; i < state.amps.n; i++)
+//     {
+//         printf("%d %lf + i%lf\n",i,creal(state.amps.arr[i].amplitude),cimag(state.amps.arr[i].amplitude));
+//     }
+
+//     return 0;
+// }
