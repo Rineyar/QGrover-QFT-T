@@ -10,8 +10,8 @@
 #define ASSERTION "enabled"
 #endif
 
-FILE *errorlog = NULL; //Файл с логами
-clock_t runtimer = 0; //Время старта
+clock_t start;
+FILE *log_file;
 
 /*
 ToDo:
@@ -21,13 +21,12 @@ ToDo:
 4) Дальше по фактам, добавлять че надо
 */
 
-int main(void) //Мейн
+int main(void)
 {
-    errorlog = fopen("errorlog.txt","w");
+    log_file = fopen("log_file.txt","w");
+    start = clock();
 
-    runtimer = clock();
-
-    fprintf(errorlog,"Asserts - %s\n",ASSERTION); //Дебаг или нет
+    fprintf(log_file,"Asserts - %s\n",ASSERTION); //Дебаг или нет
 
     State state = {0}; //Память состояний
 
@@ -35,18 +34,18 @@ int main(void) //Мейн
     if(scanf("%d",&n) != 1) //Считать
     {
         clear_state(&state); //Чистка состояний
-        fprintf(errorlog,"Ошибка чтения n!\n"); //Вывод ошибки
-        fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-        fclose(errorlog);
+        fprintf(log_file,"Ошибка чтения n!\n"); //Вывод ошибки
+        fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+        fclose(log_file);
         return 1; //Аварийное завершение
     }   
 
     if(n <= 0 || n > 20) //Проверка ввода
     {
         clear_state(&state); //Чистка состояний
-        fprintf(errorlog,"Некорректное кол-во кубитов!\n"); //Вывод ошибки
-        fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-        fclose(errorlog);
+        fprintf(log_file,"Некорректное кол-во кубитов!\n"); //Вывод ошибки
+        fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+        fclose(log_file);
         return 1; //Аварийное завершение
     }
 
@@ -54,15 +53,15 @@ int main(void) //Мейн
 
     init_state(&state,n,N); //Передача n/N в состояния
 
-    fprintf(errorlog,"Init-State: n - %d N - %d sn - %d sN - %d | ",n,N,state.n,state.N); //Залить инит в логи
-    fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
+    fprintf(log_file,"Init-State: n - %d N - %d sn - %d sN - %d | ",n,N,state.n,state.N); //Залить инит в логи
+    fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
     if(state.n != n || state.N != N) //Проверка передечи n/N в состояния
     {
         clear_state(&state); //Чистка состояний
-        fprintf(errorlog,"Ошибка передачи n/N в состояния\n"); //Вывод ошибки
-        fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-        fclose(errorlog);
+        fprintf(log_file,"Ошибка передачи n/N в состояния\n"); //Вывод ошибки
+        fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+        fclose(log_file);
         return 1; //Аварийное завершение
     }
 
@@ -70,18 +69,18 @@ int main(void) //Мейн
     if(scanf("%d",&x0) != 1) //Считать
     {
         clear_state(&state); //Чистка состояний
-        fprintf(errorlog,"Ошибка чтения x0\n"); //Вывод ошибки
-        fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-        fclose(errorlog);
+        fprintf(log_file,"Ошибка чтения x0\n"); //Вывод ошибки
+        fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+        fclose(log_file);
         return 1; //Аварийное завершение
     }
 
     if(x0 < 0 || x0 >= N) //Проверка ввода
     {
         clear_state(&state); //Чистка состояний
-        fprintf(errorlog,"Некорректный искомый элемент\n"); //Вывод ошибки
-        fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-        fclose(errorlog);
+        fprintf(log_file,"Некорректный искомый элемент\n"); //Вывод ошибки
+        fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+        fclose(log_file);
         return 1; //Аварийное завершение
     }
 
@@ -102,7 +101,7 @@ int main(void) //Мейн
     }
 
     clear_state(&state); //Чистка состояний
-    fprintf(errorlog,"Время выполнения: %lf\n",((double)(clock()-runtimer))/CLOCKS_PER_SEC); //Вывод времени работы
-    fclose(errorlog);
+    fprintf(log_file,"Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
+    fclose(log_file);
     return 0; //Успешное завершение программы
 }
