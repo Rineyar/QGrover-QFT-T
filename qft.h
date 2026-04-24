@@ -1,3 +1,5 @@
+#pragma once
+
 #include "types.h"
 
 void qft(State *state); //Квантовое преобразование Фурье

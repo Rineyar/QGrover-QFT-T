@@ -1,3 +1,5 @@
+#pragma once
+
 #include "types.h"
 
 void init_state(State *state, int n, int N); //Инициализация хранилища состояний

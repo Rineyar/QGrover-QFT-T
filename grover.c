@@ -46,5 +46,5 @@ int grover_alg(State *state, int x0) //Сам алгоритм
         }
     }
 
-    return r; //Возврат кол-ва шагов
+    return 0; //Возврат
 }
