@@ -1,9 +1,9 @@
 #include "functions.h"
-#include "time.h"
+#include "time.h" //Не "", а <>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <complex.h>
+#include <complex.h> //Лишнее
 #include "types.h"
 
 #if defined(NDEBUG) //Проверка типа сборки
@@ -17,12 +17,14 @@ FILE *log_file;
 
 #define ASSERT(cond, msg)\
     if (!(cond)) {\
-        fprintf(log_file, "TEST FAILED: %s %s:%d - %s\n", test_name, __FILE__, __LINE__, (msg));\
+        fprintf(log_file, "TEST FAILED: %s %s:%d - %s  %ld\n",\
+            test_name, __FILE__, __LINE__, (msg), ((double)(clock()-test_start))/CLOCKS_PER_SEC);\
         return 1;\
     }
 
 int grover_test(int n)
 {
+    clock_t test_start = start;
     const char* test_name = "GROVER ALGORITHM";
     State* state = malloc(sizeof(State));
     int N = 2 << n;
@@ -39,7 +41,7 @@ int grover_test(int n)
     int x = rand() % N;
     int e = grover_alg(state, x);
     ASSERT(e == 0, "");
-    fprintf(log_file, "TEST PASSED: %s n = %d, x = %d\n", test_name, n, x);
+    fprintf(log_file, "TEST PASSED: %s n = %d, x = %d IN %lds\n", test_name, n, x, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
     
     for (int i = 0; i < N; ++i)
     {
@@ -52,6 +54,7 @@ int grover_test(int n)
     read_amp_by_idx(state, x, &x_amp);
     ASSERT(cabs(x_amp)*cabs(x_amp)>0.9, "wrong");
 
+    fflush(log_file);
     return 0;
 }
 
