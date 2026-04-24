@@ -2,6 +2,7 @@
 #define TYPE Amp
 #define NAME Amp_Vec
 #include "vector/array_def.h"
+#include <stdlib.h>
 
 #define EPS 1e-10
 
@@ -28,8 +29,8 @@ void set_start_state(State *state) //Установка стартовой ам�
 void clear_state(State *state) //Прочистить -трубы- память
 {
     state->n = state->N = 0; //Убрать n/N
-
     Amp_Vec_destroy(&state->amps); //Чистить вектор
+    free(state);
 }
 
 int search_amp_by_idx(const State *state, int idx) //Поиск амплитуды по индексу
