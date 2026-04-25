@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "gates.h"
 #include "state.h"
@@ -24,8 +25,12 @@ void print_state(State *state, const char* msg) {
     putchar('\n');
 }
 
-int main(void)
+int main(int argc, const char **argv)
 {
+    int verbose = 0;
+    if (argc == 2 && strcmp(argv[1], "-v") == 0) {
+        verbose = 1;
+    }
 
     State* state = malloc(sizeof(State));
     int n = 0; // Число кубитов (1 >= n >= 20) 
@@ -68,13 +73,13 @@ int main(void)
 
     // Алгоритм Гровера
     init_state(state, n, N);
-    print_state(state, "Начальное состояние:");
+    if (verbose) print_state(state, "Начальное состояние:");
 
     set_uniform_superposition(state);
-    print_state(state, "После что-то там");
+    if (verbose) print_state(state, "После что-то там");
 
     grover_alg(state, x0);
-    print_state(state, "После алгоритма Гровера");
+    if (verbose) print_state(state, "После алгоритма Гровера");
 
     int r = grover_iters(state);
     printf("Количество итераций: %d\n", r);
