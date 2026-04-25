@@ -10,8 +10,6 @@
 #include "grover.h"
 #include "measure.h"
 
-clock_t start;
-
 void print_state(State *state, const char* msg) {
     printf("%s\n", msg);
     for (int i = 0; i < state->N; ++i) {
@@ -69,7 +67,7 @@ int main(int argc, const char **argv)
         x0--; // Корректируем смещение ввода пользователя
     }   
 
-    start = clock();
+    clock_t start = clock();
 
     // Алгоритм Гровера
     init_state(state, n, N);
