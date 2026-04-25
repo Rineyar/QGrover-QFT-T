@@ -5,61 +5,54 @@
 #include <time.h>
 #include <stdlib.h>
 
-#if defined(NDEBUG) //Проверка типа сборки
-#define ASSERTION "disabled"
-#else
-#define ASSERTION "enabled"
-#endif
-
 clock_t start;
-FILE *log_file;
 
 int main(void)
 {
-    log_file = fopen("log_file.txt","w");
-    start = clock();
 
     State* state = malloc(sizeof(State));
     int n = 0; // Число кубитов (1 >= n >= 20) 
 
-    printf("Введите необходимое число кубитов не более 20\nn = ");
-    while(scanf("%d",&n) != 1 || n <= 0 || n > 20)
+    puts("Введите необходимое число кубитов (1-20):");
+    int e = 1;
+    while(e)
     {
-        if (scanf("%d",&n) != 1) 
-        {
-            printf("Неверный ввод. Попробуйте ещё раз.\n");
+        if (scanf("%d",&n) != 1) {
+            puts("Неверный ввод. Попробуйте ещё раз:");
+            continue;
         }
-        else
-        {
-            printf("Число вне допустимого диапазона. Попробуйте ещё раз.\n");
+        if (n < 1 || n > 20) {
+            puts("Число вне допустимого диапазона. Попробуйте ещё раз:");
+            continue;
         }
-        printf("n = ");
+        e = 0;// Ошибок не было
     }   
+    int N = 2 << (n - 1); // Количество элементов
 
-    int N = 2 << n;
-
-    init_state(state, n, N);
-
+    printf("Введите искомый элемент (1-%d):\n", N);
     int x = 0; //Искомый элемент (0 >= x >= N - 1)
 
-    printf("Введите искомый элемент - число от 0 до %d\nx = ", N - 1);
-    while(scanf("%d",&x) != 1 || x < 0 || x > N - 1)
+    e = 1;
+    while(e)
     {
-        if (scanf("%d",&x) != 1) 
-        {
+        if (scanf("%d",&x) != 1) {
             printf("Неверный ввод. Попробуйте ещё раз.\n");
+            continue;
         }
-        else
-        {
+        if (x < 1 || x > N) {
             printf("Число вне допустимого диапазона. Попробуйте ещё раз.\n");
+            continue;
         }
-        printf("x = ");
+        e = 0; // Ошибок не было
+        x--; // Корректируем смещение ввода пользователя
     }   
 
-    set_uniform_superposition(state);
+    start = clock();
 
+    init_state(state, n, N);
+    set_uniform_superposition(state);
     clear_state(state); //Чистка состояний
+
     printf("Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
-    fclose(log_file);
     return 0; //Успешное завершение программы
 }
