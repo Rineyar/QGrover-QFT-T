@@ -1,10 +1,10 @@
-#include "functions.h"
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <complex.h>
-#include "types.h"
+
+#include "functions.h"
 
 #if defined(NDEBUG) //Проверка типа сборки
 #define ASSERTION "disabled"

@@ -1,9 +1,9 @@
-#include "types.h"
-#include "functions.h"
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
 #include <stdlib.h>
+
+#include "functions.h"
 
 clock_t start;
 
@@ -51,6 +51,9 @@ int main(void)
 
     init_state(state, n, N);
     set_uniform_superposition(state);
+    int r = grover_iters(state);
+    printf("%d", r);
+    grover_alg(state, x);
     clear_state(state); //Чистка состояний
 
     printf("Время выполнения: %lf\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы

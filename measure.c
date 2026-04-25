@@ -3,7 +3,7 @@
 
 int rand_return_x0(State *state/*, double *u_return*/) //Возвращает индекс наиболее вероятного
 {
-    double u = ((double)rand())/(RAND_MAX+1); //Шанс фозврата именно сейчас
+    double u = ((double)rand())/((double)RAND_MAX+1); //Шанс фозврата именно сейчас
 
     // *u_return = u; //В прошлом отладочная, можно убрать
 
