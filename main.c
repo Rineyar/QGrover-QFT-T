@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #include "gates.h"
 #include "state.h"
@@ -25,6 +26,7 @@ void print_state(State *state, const char* msg) {
 
 int main(int argc, const char **argv)
 {
+    setlocale(LC_ALL, "ru_RU.UTF-8");
     int verbose = 0;
     if (argc == 2 && strcmp(argv[1], "-v") == 0) {
         verbose = 1;
