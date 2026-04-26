@@ -15,6 +15,8 @@
 clock_t start;
 FILE *log_file;
 double eps = 1e-9; // Возможная погрешность double
+int n, N;
+State* state;
 
 #define ASSERT(cond, msg)\
     if (!(cond)) {\
@@ -28,15 +30,32 @@ double norm_square_amps(State* state)
 {
     double norm_squared = 0;
 
+    fprintf(log_file, "norm_square_amps processing...\n");
     for (int i = 0; i < state->N; ++i)
     {
         double complex cur;
         read_amp_by_idx(state, i, &cur); 
         double re = creal(cur);
         double im = cimag(cur);
+        fprintf(log_file, "%d amp: %g + %gi\n", i, re, im);
         norm_squared+= re*re + im*im;
+        fprintf(log_file, "%d square_sum: %lf\n", i, norm_squared);
     }
     return norm_squared;
+}
+
+void print_state(State *state, const char* msg) {
+    fprintf(log_file, "%s\n", msg);
+    for (int i = 0; i < state->N; ++i) {
+        complex double amp; //= state->amps.arr[search_amp_by_idx(state, i)].amplitude;
+        read_amp_by_idx(state, i, &amp);
+        double real = creal(amp);
+        double imag = cimag(amp);
+        fprintf(log_file, "Amplitude %d: %g", i, real);
+        if (imag) fprintf(log_file, " + %gi", imag);
+        fprintf(log_file, "\n");
+    }
+    fprintf(log_file, "\n");
 }
 
 int grover_test(int n)
@@ -44,9 +63,9 @@ int grover_test(int n)
     clock_t test_start = start;
     const char* test_name = "GROVER ALGORITHM";
     
-    State* state = malloc(sizeof(State));
+    state = malloc(sizeof(State));
     
-    int N = 2 << (n - 1);
+    N = 2 << (n - 1);
     int x = rand() % N;
 
     fprintf(log_file, "IN: n = %d, x = %d\n", n, x);
@@ -85,55 +104,48 @@ int grover_test(int n)
     return 0;
 }
 
-int qft_test(int n) // Проверка на базисных состояниях
+int qft_BStest(int i) // Проверка на базисных состояниях
 {
     clock_t test_start = start;
     const char* test_name = "QFT ON BASIS STATES";
 
-    State* state = malloc(sizeof(State));
-    int N = 2 << (n - 1);
+    Amp_Vec_destroy(&state->amps);
+    ASSERT(state->amps.arr == 0, "Ошибка очистки массива. Не удалось задать состояние.")
+    set_amp_by_idx(state, 1, i);
+    fprintf(log_file, "\n\n---STATE %d---\n", i);
+    print_state(state, "> Before QFT:");
 
-    fprintf(log_file, "IN: n = %d\n", n);
+    qft(state);
 
-    init_state(state, n, N); //Инициализация памяти
+    print_state(state, "> After QFT:");
 
-    for (int i = 0; i < N; ++i) //Перебираем состояния
+    // Сумма квадратов модулей амплитуд равна 1
+    double sq = norm_square_amps(state);
+    fprintf(log_file, "norm_square_amps: %lf\n", sq);
+    ASSERT(fabs(sq - 1) <= eps, "Сумма квадратов модулей амплитуд не равна 1");
+
+    // Эквивалентность гейту Адамара
+    double complex exp = 1/sqrt(state->N);
+    for (int j = 0; j < N; ++j)
     {
-        Amp_Vec_destroy(&state->amps);
-        ASSERT(state->amps.arr == 0, "Ошибка очистки массива. Не удалось задать состояние.")
-        set_amp_by_idx(state, 1, i);
-        fprintf(log_file, "\nSTATE %d\n", i);
-        qft(state);
-
-        // Сумма квадратов модулей амплитуд равна 1
-        fprintf(log_file, "norm_square_amps: %lf\n", norm_square_amps(state));
-        ASSERT(fabs(norm_square_amps(state) - 1) <= eps, "Сумма квадратов модулей амплитуд не равна 1");
-
-        // Эквивалентность гейту Адамара
-        double complex exp = 1/sqrt(state->N);
-        for (int j = 0; j < N; ++j)
-        {
-            double complex cur;
-            read_amp_by_idx(state, j, &cur);
-            ASSERT(cur == exp, "Эквивалентность Адамару не проходит");
-        }
-
-        // Проверка фаз
-        
-        for (int j = 0; j < N; ++j)
-        {
-            exp = (i * j)/N;
-            double complex cur;
-            read_amp_by_idx(state, j, &cur);
-            double phase = carg(cur)/(2 * M_PI);
-            ASSERT(phase == exp, "Фаза не соответствует ожидаемой");
-        }
-
+        double complex cur;
+        read_amp_by_idx(state, j, &cur);
+        ASSERT(cur == exp, "Эквивалентность Адамару не проходит");
     }
 
+    // Проверка фаз
     
-
-
+    for (int j = 0; j < N; ++j)
+    {
+        exp = (i * j)/N;
+        double complex cur;
+        read_amp_by_idx(state, j, &cur);
+        double phase = carg(cur)/(2 * M_PI);
+        ASSERT(phase == exp, "Фаза не соответствует ожидаемой");
+    }
+    fprintf(log_file, "\nSTATE %d TEST PASSED!\n", i);
+    
+    fflush(log_file);  // Вывод после каждого теста
     return 0;
 }
 
@@ -147,5 +159,16 @@ int main(void)
         fprintf(log_file, "\n- TEST %d -\n", n);
         grover_test(n);
     }*/
-    qft_test(2);
+    n = 2; // Пока так для удобства
+
+    state = malloc(sizeof(State));
+    N = 2 << (n - 1);
+
+    fprintf(log_file, "IN: n = %d\n    N = %d\n", n, N);
+
+    init_state(state, n, N); //Инициализация памяти
+    for (int i = 0; i < N; ++i) //Перебираем состояния
+    {
+        qft_BStest(i);
+    }
 }
