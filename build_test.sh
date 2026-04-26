@@ -1,1 +1,0 @@
-gcc test.c state.c gates.c grover.c measure.c qft.c -o QuantAlgTest -lm
