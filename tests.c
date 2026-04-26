@@ -47,7 +47,7 @@ double norm_square_amps(State* state)
 void print_state(State *state, const char* msg) {
     fprintf(log_file, "%s\n", msg);
     for (int i = 0; i < state->N; ++i) {
-        complex double amp; //= state->amps.arr[search_amp_by_idx(state, i)].amplitude;
+        complex double amp = state->amps.arr[search_amp_by_idx(state, i)].amplitude;
         read_amp_by_idx(state, i, &amp);
         double real = creal(amp);
         double imag = cimag(amp);
