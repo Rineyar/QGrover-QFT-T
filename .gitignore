@@ -3,3 +3,6 @@ QuantAlgTest
 *.exe
 *.txt
 *.old
+.vscode/
+.build/
+build/
