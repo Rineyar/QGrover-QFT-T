@@ -124,12 +124,16 @@ int qft_BStest(int i) // Проверка на базисных состояни
     fprintf(log_file, "norm_square_amps: %lf\n", sq);
     ASSERT(fabs(sq - 1) <= eps, "Сумма квадратов модулей амплитуд не равна 1");
 
-    // Эквивалентность гейту Адамара
+    // Применение qft к базисному состоянию эквивалентно применению гейта Адамара
     double complex exp = 1/sqrt(state->N);
+    fprintf(log_file, "\nchecking amps...\nexp: %g + %gi\n", creal(exp), cimag(exp));
     for (int j = 0; j < N; ++j)
     {
         double complex cur;
         read_amp_by_idx(state, j, &cur);
+
+        fprintf(log_file, "%d amp: %g + %gi\n", j, creal(cur), cimag(cur));
+
         ASSERT(cur == exp, "Эквивалентность Адамару не проходит");
     }
 
