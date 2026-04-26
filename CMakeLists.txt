@@ -9,7 +9,7 @@ add_library(qalg_lib STATIC
     state.c
 )
 
-target_include_directories(qalg_lib PUBLIC $(CMAKE_CURRENT_SOURCE_DIR))
+target_include_directories(qalg_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(qalg_lib PUBLIC c_std_99)
 target_link_libraries(qalg_lib PRIVATE m)
 
