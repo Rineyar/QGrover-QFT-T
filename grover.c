@@ -17,23 +17,15 @@ int grover_iters(State *state) //Кол-во итераций
 {
     int r = (int)(M_PI_4 * sqrt(state->N)); //Вычисление
 
-    if(r < 0) //Проверка
-    {
-        return -1;
-    }
-
     return r; //Возврат
 }
 
 int grover_alg(State *state, int x0) //Сам алгоритм
 {
+    if (state->N <= 0) return -1;
     int r = grover_iters(state); //Кол-во шагов
-
-    if(r < 0) //Проверка
-    {
-        return -1;
-    }
-
+    if (r < 0) return -2;
+    
     int cor = 0; //Проверка
 
     for(int i = 0; i < r; i++) //Шагаем
@@ -42,7 +34,7 @@ int grover_alg(State *state, int x0) //Сам алгоритм
         
         if(cor < 0) //Если ошибка во время выполнения
         {
-            return -2;
+            return -3;
         }
     }
 

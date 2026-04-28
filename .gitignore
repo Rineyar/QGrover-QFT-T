@@ -1,0 +1,9 @@
+QuantAlg
+QuantAlgTest
+*.exe
+*.txt
+!CMakeLists.txt
+*.old
+.vscode/
+.build/
+build/

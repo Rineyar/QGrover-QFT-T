@@ -1,6 +1,8 @@
 #pragma once
 
 #include <complex.h>
+#define complex _Complex
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
