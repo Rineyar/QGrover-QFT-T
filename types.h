@@ -3,8 +3,8 @@
 #include <complex.h>
 #define complex _Complex
 
-#define _USE_MATH_DEFINES
 #include <math.h>
+#define _USE_MATH_DEFINES
 
 typedef struct amp //Структура для хранения амплитуд
 {

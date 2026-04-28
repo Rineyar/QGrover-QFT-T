@@ -39,7 +39,7 @@ double norm_square_amps(State* state)
         double im = cimag(cur);
         fprintf(log_file, "%d amp: %g + %gi\n", i, re, im);
         norm_squared+= re*re + im*im;
-        fprintf(log_file, "%d square_sum: %lf\n", i, norm_squared);
+        fprintf(log_file, "%d square_sum: %g\n", i, norm_squared);
     }
     return norm_squared;
 }
@@ -47,13 +47,13 @@ double norm_square_amps(State* state)
 void print_state(State *state, const char* msg) {
     fprintf(log_file, "%s\n", msg);
     for (int i = 0; i < state->N; ++i) {
-        complex double amp = state->amps.arr[search_amp_by_idx(state, i)].amplitude;
-        read_amp_by_idx(state, i, &amp);
+        double complex amp = state->amps.arr[search_amp_by_idx(state, i)].amplitude;
+        //read_amp_by_idx(state, i, &amp);
         double real = creal(amp);
         double imag = cimag(amp);
-        fprintf(log_file, "Amplitude %d: %g", i, real);
-        if (imag) fprintf(log_file, " + %gi", imag);
-        fprintf(log_file, "\n");
+        fprintf(log_file, "Amplitude %d: %g + %gi\n", i, real, imag);
+        //if (imag) fprintf(log_file, " + %gi", imag);
+        //fprintf(log_file, "\n");
     }
     fprintf(log_file, "\n");
 }
@@ -109,8 +109,13 @@ int qft_BStest(int i) // Проверка на базисных состояни
     clock_t test_start = start;
     const char* test_name = "QFT ON BASIS STATES";
 
-    Amp_Vec_destroy(&state->amps);
-    ASSERT(state->amps.arr == 0, "Ошибка очистки массива. Не удалось задать состояние.")
+    state->amps.n = 0; //Чистим амплитуды
+    for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
+    {
+        Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=0}); //Добавление амплитуды
+    }
+
+    //ASSERT(state->amps.arr == 0, "Ошибка очистки массива. Не удалось задать состояние.")
     set_amp_by_idx(state, 1, i);
     fprintf(log_file, "\n\n---STATE %d---\n", i);
     print_state(state, "> Before QFT:");
@@ -170,7 +175,7 @@ int main(void)
 
     fprintf(log_file, "IN: n = %d\n    N = %d\n", n, N);
 
-    init_state(state, n, N); //Инициализация памяти
+    
     for (int i = 0; i < N; ++i) //Перебираем состояния
     {
         qft_BStest(i);
