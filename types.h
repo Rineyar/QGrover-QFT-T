@@ -3,8 +3,8 @@
 #include <complex.h>
 #define complex _Complex
 
-#include <math.h>
 #define _USE_MATH_DEFINES
+#include <math.h>
 
 typedef struct amp //Структура для хранения амплитуд
 {
@@ -23,3 +23,5 @@ typedef struct state //структура хранения состояний
     int N; //Кол-во элементов
     Amp_Vec amps; //амплитуды
 } State;
+
+extern char* func_name; 

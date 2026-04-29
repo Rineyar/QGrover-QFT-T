@@ -2,6 +2,8 @@
 
 int grover_step(State *state, int x0) //Шаг алгоритма гровера
 {
+    func_name = "grover_step";
+
     int cor = oracle(state,x0); //Вызор окарула
 
     if(cor > 0) //если сработал
@@ -15,6 +17,8 @@ int grover_step(State *state, int x0) //Шаг алгоритма гровера
 
 int grover_iters(State *state) //Кол-во итераций
 {
+    func_name = "grover_iters";
+
     int r = (int)(M_PI_4 * sqrt(state->N)); //Вычисление
 
     return r; //Возврат
@@ -22,6 +26,8 @@ int grover_iters(State *state) //Кол-во итераций
 
 int grover_alg(State *state, int x0) //Сам алгоритм
 {
+    func_name = "grover_alg";
+    
     if (state->N <= 0) return -1;
     int r = grover_iters(state); //Кол-во шагов
     if (r < 0) return -2;

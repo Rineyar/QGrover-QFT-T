@@ -55,7 +55,7 @@ int set_amp_by_idx(State *state, complex double amp, int idx) //Установи
 {
     if(idx < 0 || idx >= state->N) //Если индекс некорректен
     {
-        return 0;
+        return -1;
     }
 
     int i = search_amp_by_idx(state,idx); //Получение индекса амплитуды
@@ -67,7 +67,7 @@ int set_amp_by_idx(State *state, complex double amp, int idx) //Установи
             remove_amp_by_i(state,i); //Удаляем
         }
 
-        return 3; //Закончили нулём
+        return 0; //Закончили нулём
     }
 
     if(i != -2) //Если такая есть
@@ -99,11 +99,11 @@ int read_amp_by_idx(const State *state, int idx, complex double *return_amp)
     if(i != -2) //Нашли
     {
         *return_amp = state->amps.arr[i].amplitude; //Вернули
-        return 1;
+        return 0;
     }
 
     // printf("[DBG] i не найден! | i - %d idx - %d\n",i,idx);
-    return 0; //Не нашли, значит 0
+    return -2; //Не нашли, значит 0
 }
 
 int remove_amp_by_i(State *state, int i)

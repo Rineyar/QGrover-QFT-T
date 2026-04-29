@@ -109,6 +109,9 @@ int qft_BStest(int i) // Проверка на базисных состояни
     clock_t test_start = start;
     const char* test_name = "QFT ON BASIS STATES";
 
+    Amp_Vec_destroy(&state->amps);
+    init_state(state, n, N); //Инициализация памяти
+    
     state->amps.n = 0; //Чистим амплитуды
     for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
     {
@@ -137,6 +140,8 @@ int qft_BStest(int i) // Проверка на базисных состояни
         double complex cur;
         read_amp_by_idx(state, j, &cur);
 
+        cur = cabs(cur);
+
         fprintf(log_file, "%d amp: %g + %gi\n", j, creal(cur), cimag(cur));
 
         ASSERT(cur == exp, "Эквивалентность Адамару не проходит");
@@ -146,10 +151,11 @@ int qft_BStest(int i) // Проверка на базисных состояни
     
     for (int j = 0; j < N; ++j)
     {
-        exp = (i * j)/N;
+        exp = ((i + 1) * (j + 1) * 2 * M_PI)/N;
         double complex cur;
         read_amp_by_idx(state, j, &cur);
-        double phase = carg(cur)/(2 * M_PI);
+        double phase = carg(cur);
+        fprintf(log_file, "\nphase check...\nexp: %g\nphase: %g\n", exp, phase);
         ASSERT(phase == exp, "Фаза не соответствует ожидаемой");
     }
     fprintf(log_file, "\nSTATE %d TEST PASSED!\n", i);
