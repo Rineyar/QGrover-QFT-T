@@ -3,7 +3,7 @@
 
 int oracle(State *state, int x0) //Оракул, он меняет + на - и наоборот
 {
-    func_name = "oracle";
+    //func_name = "oracle";
 
     int i = search_amp_by_idx(state,x0); //Получение индекса
 

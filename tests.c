@@ -43,17 +43,16 @@ double norm_square_amps(State* state)
     }
     return norm_squared;
 }
-
-void print_state(State *state, const char* msg) {
-    fprintf(log_file, "%s\n", msg);
-    for (int i = 0; i < state->N; ++i) {
-        double complex amp = state->amps.arr[search_amp_by_idx(state, i)].amplitude;
-        //read_amp_by_idx(state, i, &amp);
+                                                  //-1073740940 (Heap Corruption)
+void print_state(State *state, const char* msg) { // set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -g") ->
+    fprintf(log_file, "%s\n", msg);               // -> AddressSanitizer в CMakeLists, чтобы понять, где ошибки
+    for (int i = 0; i < state->N; ++i) 
+    {
+        double complex amp;
+        read_amp_by_idx(state, i, &amp);
         double real = creal(amp);
         double imag = cimag(amp);
         fprintf(log_file, "Amplitude %d: %g + %gi\n", i, real, imag);
-        //if (imag) fprintf(log_file, " + %gi", imag);
-        //fprintf(log_file, "\n");
     }
     fprintf(log_file, "\n");
 }
@@ -155,7 +154,8 @@ int qft_BStest(int i) // Проверка на базисных состояни
         double complex cur;
         read_amp_by_idx(state, j, &cur);
         double phase = carg(cur);
-        fprintf(log_file, "\nphase check...\nexp: %g\nphase: %g\n", exp, phase);
+        fprintf(log_file, "\nphase check...\namp: %g + %gi\nexp: %g\nphase: %g\n",\
+            creal(cur), cimag(cur), exp, phase);
         ASSERT(phase == exp, "Фаза не соответствует ожидаемой");
     }
     fprintf(log_file, "\nSTATE %d TEST PASSED!\n", i);

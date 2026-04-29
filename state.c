@@ -103,7 +103,8 @@ int read_amp_by_idx(const State *state, int idx, complex double *return_amp)
     }
 
     // printf("[DBG] i не найден! | i - %d idx - %d\n",i,idx);
-    return -2; //Не нашли, значит 0
+    *return_amp = 0;
+    return 0; //Не нашли, значит 0
 }
 
 int remove_amp_by_i(State *state, int i)

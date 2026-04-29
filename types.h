@@ -24,4 +24,4 @@ typedef struct state //структура хранения состояний
     Amp_Vec amps; //амплитуды
 } State;
 
-extern char* func_name; 
+//extern char* func_name; 

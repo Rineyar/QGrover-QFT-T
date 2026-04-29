@@ -10,7 +10,7 @@
 
 int verbose = 0; // Выводить состояния амплитуд? (не работает)
 int command = 0; // Вызываемая функция
-char* func_name; // Имя функции для обработчика ошибок. Если будет время, можно реализовать
+char* func_name = NULL; // Имя функции для обработчика ошибок. Если будет время, можно реализовать
                  // стеком для возможности полностью проследить, откуда ошибка пошла
 clock_t start;
 
@@ -58,15 +58,15 @@ clock_t start;
 
 void print_state(State *state, const char* msg) {
     printf("%s\n", msg);
-    for (int i = 0; i < state->N; ++i) {
-        complex double amp = state->amps.arr[search_amp_by_idx(state, i)].amplitude;
+    for (int i = 0; i < state->N; ++i) 
+    {
+        double complex amp;
+        read_amp_by_idx(state, i, &amp);
         double real = creal(amp);
         double imag = cimag(amp);
-        printf("Amplitude %d: %g", i + 1, real);
-        if (imag) printf(" + %gi", imag);
-        putchar('\n');
+        printf("Амплитуда %d: %g + %gi\n", i, real, imag);
     }
-    putchar('\n');
+    printf("\n");
 }
 
 int QgroverAlg(void)
@@ -123,9 +123,12 @@ int QgroverAlg(void)
     return 0; //Успешное завершение программы
 }
 
+//int QFT(state)
+
 
 int main(int argc, const char **argv)
 {
+    
     setlocale(LC_ALL, "ru_RU.UTF-8");
     
     if (argc == 2 && strcmp(argv[1], "-v") == 0) {
