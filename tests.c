@@ -26,26 +26,26 @@ State* state;
         return 1;\
     }
 
-double norm_square_amps(State* state)
+// Найти сумму квадратов модулей амплитуд
+double norm_square_amps(State* state) 
 {
     double norm_squared = 0;
 
-    fprintf(log_file, "norm_square_amps processing...\n");
     for (int i = 0; i < state->N; ++i)
     {
         double complex cur;
         read_amp_by_idx(state, i, &cur); 
         double re = creal(cur);
         double im = cimag(cur);
-        fprintf(log_file, "%d amp: %g + %gi\n", i, re, im);
         norm_squared+= re*re + im*im;
-        fprintf(log_file, "%d square_sum: %g\n", i, norm_squared);
     }
     return norm_squared;
 }
-                                                  //-1073740940 (Heap Corruption)
-void print_state(State *state, const char* msg) { // set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -g") ->
-    fprintf(log_file, "%s\n", msg);               // -> AddressSanitizer в CMakeLists, чтобы понять, где ошибки
+  
+// Вывод всех амплитуд
+void print_state(State *state, const char* msg)
+{ 
+    fprintf(log_file, "%s\n", msg);               
     for (int i = 0; i < state->N; ++i) 
     {
         double complex amp;
@@ -57,6 +57,7 @@ void print_state(State *state, const char* msg) { // set(CMAKE_C_FLAGS "${CMAKE_
     fprintf(log_file, "\n");
 }
 
+// 
 int grover_test(int n)
 {
     clock_t test_start = start;
@@ -95,7 +96,7 @@ int grover_test(int n)
     ASSERT(P > 0.9, "Вероятность слишком низкая: P(x) <= 0.9");
 
     fprintf(log_file, "OUT: x = %d, P(x) = %lf\n", x, P);
-    fprintf(log_file, "%s PASSED IN %lfsec\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
+    fprintf(log_file, "%s PASSED IN %lfsec\n\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
 
     clear_state(state); // Очистка памяти
     fflush(log_file);  // Вывод после каждого теста
@@ -103,64 +104,79 @@ int grover_test(int n)
     return 0;
 }
 
-int qft_BStest(int i) // Проверка на базисных состояниях
+// Тест QFT на базисных состояниях
+// n - число кубитов
+// ver - вывод амплитуд
+int qft_BStest(int n, int ver) 
 {
     clock_t test_start = start;
     const char* test_name = "QFT ON BASIS STATES";
 
-    Amp_Vec_destroy(&state->amps);
+    state = malloc(sizeof(State));
+    N = 2 << (n - 1);
     init_state(state, n, N); //Инициализация памяти
-    
-    state->amps.n = 0; //Чистим амплитуды
-    for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
+
+    //fprintf(log_file, "IN: n = %d\n    N = %d\n", n, N);
+
+    for (int i = 0; i < N; ++i) //Перебираем состояния
     {
-        Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=0}); //Добавление амплитуды
+        Amp_Vec_destroy(&state->amps);
+        init_state(state, n, N); //Инициализация памяти
+        
+        state->amps.n = 0; //Чистим амплитуды
+        for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
+        {
+            Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=0}); //Добавление амплитуды
+        }
+
+        set_amp_by_idx(state, 1, i);
+        if (ver==1)
+        {
+            fprintf(log_file, "\n\n---STATE %d---\n\n", i);
+            print_state(state, "> Before QFT:");
+        }
+
+        qft(state);
+
+        if (ver==1) 
+        {
+            print_state(state, "> After QFT:");
+            fprintf(log_file,"\n");
+        }
+
+        // Сумма квадратов модулей амплитуд равна 1
+        double sq = norm_square_amps(state);
+        ASSERT(fabs(sq - 1) <= eps, "Сумма квадратов модулей амплитуд не равна 1");
+
+        // Проверка амплитуд
+        double complex exp = 1/sqrt(state->N);
+
+        for (int j = 0; j < N; ++j)
+        {
+            double complex cur;
+            read_amp_by_idx(state, j, &cur);
+
+            cur = cabs(cur);
+
+            ASSERT(fabs(cur - exp) <= eps, "Амплитуды не соответствуют ожидаемым");
+        }
+
+        // Проверка фаз 
+        for (int j = 0; j < N; ++j)
+        {
+            exp = (2.0 * M_PI * i * j) / N;
+            exp = fmod(exp, 2.0 * M_PI);
+            if (creal(exp) > M_PI) exp -= 2.0 * M_PI;
+            if (creal(exp) <= -M_PI) exp += 2.0 * M_PI;
+            double complex cur;
+            read_amp_by_idx(state, j, &cur);
+            double phase = carg(cur);
+            ASSERT(fabs(phase - exp) <= eps, "Фаза не соответствует ожидаемой");
+        }
+        fprintf(log_file, "STATE %d QFT TEST PASSED!\n", i);
+        
+        fflush(log_file);  // Вывод после каждого теста
     }
-
-    //ASSERT(state->amps.arr == 0, "Ошибка очистки массива. Не удалось задать состояние.")
-    set_amp_by_idx(state, 1, i);
-    fprintf(log_file, "\n\n---STATE %d---\n", i);
-    print_state(state, "> Before QFT:");
-
-    qft(state);
-
-    print_state(state, "> After QFT:");
-
-    // Сумма квадратов модулей амплитуд равна 1
-    double sq = norm_square_amps(state);
-    fprintf(log_file, "norm_square_amps: %lf\n", sq);
-    ASSERT(fabs(sq - 1) <= eps, "Сумма квадратов модулей амплитуд не равна 1");
-
-    // Применение qft к базисному состоянию эквивалентно применению гейта Адамара
-    double complex exp = 1/sqrt(state->N);
-    fprintf(log_file, "\nchecking amps...\nexp: %g + %gi\n", creal(exp), cimag(exp));
-    for (int j = 0; j < N; ++j)
-    {
-        double complex cur;
-        read_amp_by_idx(state, j, &cur);
-
-        cur = cabs(cur);
-
-        fprintf(log_file, "%d amp: %g + %gi\n", j, creal(cur), cimag(cur));
-
-        ASSERT(cur == exp, "Эквивалентность Адамару не проходит");
-    }
-
-    // Проверка фаз
-    
-    for (int j = 0; j < N; ++j)
-    {
-        exp = ((i + 1) * (j + 1) * 2 * M_PI)/N;
-        double complex cur;
-        read_amp_by_idx(state, j, &cur);
-        double phase = carg(cur);
-        fprintf(log_file, "\nphase check...\namp: %g + %gi\nexp: %g\nphase: %g\n",\
-            creal(cur), cimag(cur), exp, phase);
-        ASSERT(phase == exp, "Фаза не соответствует ожидаемой");
-    }
-    fprintf(log_file, "\nSTATE %d TEST PASSED!\n", i);
-    
-    fflush(log_file);  // Вывод после каждого теста
     return 0;
 }
 
@@ -169,21 +185,12 @@ int main(void)
     log_file = fopen("log_file.txt","w");
 
     start = clock();
-    /*for (int n = 1; n <= 20; ++n)
+    for (int n = 1; n <= 20; ++n)
     {
-        fprintf(log_file, "\n- TEST %d -\n", n);
+        fprintf(log_file, "\n===== TEST %d =====\n", n);
         grover_test(n);
-    }*/
-    n = 2; // Пока так для удобства
-
-    state = malloc(sizeof(State));
-    N = 2 << (n - 1);
-
-    fprintf(log_file, "IN: n = %d\n    N = %d\n", n, N);
+        qft_BStest(n, 0);
+    }
 
     
-    for (int i = 0; i < N; ++i) //Перебираем состояния
-    {
-        qft_BStest(i);
-    }
 }
