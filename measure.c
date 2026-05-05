@@ -1,5 +1,6 @@
 #include "measure.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 int rand_return_x0(State *state/*, double *u_return*/) //Возвращает индекс наиболее вероятного
 {
@@ -21,4 +22,39 @@ int rand_return_x0(State *state/*, double *u_return*/) //Возвращает и
     }
 
     return -1; //Что-то пошло не так
+}
+
+static FILE *saved_amps = NULL;
+
+void open_amps_file(const char *filename)
+{
+    if(filename == NULL)
+    {
+        saved_amps = fopen("saved_amps.bin","wb");
+    } else {
+        saved_amps = fopen(filename,"wb");
+    }
+}
+
+void close_amps_file()
+{
+    fclose(saved_amps);
+}
+
+void save_amps_count(State *state)
+{
+    fwrite(&state->amps.n,sizeof(int),1,saved_amps);
+}
+
+void save_amps(State *state)
+{
+    for(int i = 0; i < state->amps.n; i++)
+    {
+        fwrite(&state->amps.arr[i].amplitude,sizeof(complex double),1,saved_amps);
+    }
+}
+
+void save_states_count(int count)
+{
+    fwrite(&count,sizeof(int),1,saved_amps);
 }

@@ -117,6 +117,11 @@ int QgroverAlg(void)
     // Количество ненулевых состояний
     printf("Ненулевых состояний: %d\n", state->amps.n);
 
+    open_amps_file(NULL);
+    save_amps_count(state);
+    save_amps(state);
+    close_amps_file();
+
     clear_state(state); //Чистка состояний
     printf("\nВремя выполнения: %lf сек.\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
