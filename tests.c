@@ -96,7 +96,7 @@ int grover_test(int n)
     ASSERT(P > 0.9, "Вероятность слишком низкая: P(x) <= 0.9");
 
     fprintf(log_file, "OUT: x = %d, P(x) = %lf\n", x, P);
-    fprintf(log_file, "%s PASSED IN %lfsec\n\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
+    fprintf(log_file, "%s PASSED IN %lfsec\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
 
     clear_state(state); // Очистка памяти
     fflush(log_file);  // Вывод после каждого теста
@@ -171,12 +171,16 @@ int qft_BStest(int n, int ver)
             double complex cur;
             read_amp_by_idx(state, j, &cur);
             double phase = carg(cur);
-            ASSERT(fabs(phase - exp) <= eps, "Фаза не соответствует ожидаемой");
+            double diff = fabs(phase - exp);
+            // Учитываем скачок на границе π/-π
+            if (diff > M_PI) diff = 2.0 * M_PI - diff;
+            ASSERT(diff <= eps, "Фаза не соответствует ожидаемой");
         }
-        fprintf(log_file, "STATE %d QFT TEST PASSED!\n", i);
+        if (ver==1) fprintf(log_file, "STATE %d QFT TEST PASSED!\n", i);
         
         fflush(log_file);  // Вывод после каждого теста
     }
+    fprintf(log_file, "%s PASSED IN %lfsec\n\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
     return 0;
 }
 
