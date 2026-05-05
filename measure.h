@@ -1,6 +1,9 @@
 #pragma once
 
 #include "types.h"
+#include "state.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 int rand_return_x0(State *state/*, double *u_return*/); //Вернуть индекс числа которое было наиболее вероятным
 
@@ -19,3 +22,5 @@ void set_pos_to_states_count();
 long get_file_pos();
 
 void set_pos_to(long pos);
+
+double norm_square_amps(State* state); // Найти сумму квадратов модулей амплитуд

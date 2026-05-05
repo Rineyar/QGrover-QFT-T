@@ -1,6 +1,8 @@
 #pragma once
 
 #include "types.h"
+#include "measure.h"
+#include "stdio.h"
 
 void init_state(State *state, int n, int N); //Инициализация хранилища состояний
 
@@ -18,4 +20,8 @@ int remove_amp_by_i(State *state, int i); //Удаление амплитуды 
 
 int is_amp_null(const complex double amp); //Является ли амплитуда нулевой
 
-// int set_random_state(State* state);
+double rand_double(double min, double max); // Функция для генерации случайного double в диапазоне [min, max]
+
+int set_random_state(State* state); // Создание случайного состояния амплитуд
+
+void print_state(State *state, const char* msg, FILE* file); // Вывод всех амплитуд

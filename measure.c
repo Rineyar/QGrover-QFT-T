@@ -1,6 +1,4 @@
 #include "measure.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 int rand_return_x0(State *state/*, double *u_return*/) //Возвращает индекс наиболее вероятного
 {
@@ -72,4 +70,19 @@ long get_file_pos()
 void set_pos_to(long pos)
 {
     fseek(saved_amps,pos,SEEK_SET);
+}
+
+double norm_square_amps(State* state) 
+{
+    double norm_squared = 0;
+
+    for (int i = 0; i < state->N; ++i)
+    {
+        double complex cur;
+        read_amp_by_idx(state, i, &cur); 
+        double re = creal(cur);
+        double im = cimag(cur);
+        norm_squared+= re*re + im*im;
+    }
+    return norm_squared;
 }

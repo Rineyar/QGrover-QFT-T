@@ -138,18 +138,40 @@ int is_amp_null(const complex double amp) //Проверка на 0
     return 0; //Нет
 }
 
-// int set_random_state(State* state)
-// {
-//     for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
-//     {
-//         Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=rand_double(-1, 1)}); //Добавление амплитуды
-//     }
+double rand_double(double min, double max) {
+    return min + (max - min) * rand() / RAND_MAX;
+}
 
-//     double norm_sqrt = sqrt(norm_square_amps(state));
+int set_random_state(State* state)
+{
+    // Каждая амплитуда - рандомное число типа double в диапазоне [-1, 1]
+    for(int i = 0; i < state->N; i++)
+    {
+        Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=rand_double(-1, 1)});
+    }
 
-//     for(int i = 0; i < state->N; i++) {
-//         double complex amp;
-//         int e = read_amp_by_idx(state, i, &amp);
-//         set_amp_by_idx(state, amp / norm_sqrt, i);
-//     }
-// }
+    // Квадратный корень из суммы квадратов модулей для нормировки
+    double norm_sqrt = sqrt(norm_square_amps(state));
+
+    // Нормируем состояние
+    for(int i = 0; i < state->N; i++) 
+    {
+        double complex amp;
+        int e = read_amp_by_idx(state, i, &amp);
+        set_amp_by_idx(state, amp / norm_sqrt, i);
+    }
+}
+
+void print_state(State *state, const char* msg, FILE* file)
+{ 
+    fprintf(file, "%s\n", msg);               
+    for (int i = 0; i < state->N; ++i) 
+    {
+        double complex amp;
+        read_amp_by_idx(state, i, &amp);
+        double real = creal(amp);
+        double imag = cimag(amp);
+        fprintf(file, "Amplitude %d: %g + %gi\n", i, real, imag);
+    }
+    fprintf(file, "\n");
+}

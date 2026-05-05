@@ -58,7 +58,7 @@ State *state = NULL;
     }   
     
 
-void print_state(State *state, const char* msg) {
+/*void print_state(State *state, const char* msg) {
     printf("%s\n", msg);
     for (int i = 0; i < state->N; ++i) 
     {
@@ -69,7 +69,7 @@ void print_state(State *state, const char* msg) {
         printf("Амплитуда %d: %g + %gi\n", i, real, imag);
     }
     printf("\n");
-}
+}*/
 
 int QgroverAlg(void)
 {
@@ -92,10 +92,10 @@ int QgroverAlg(void)
 
     // Алгоритм Гровера
     init_state(state, n, N);
-    if (verbose) print_state(state, "Начальное состояние:");
+    if (verbose) print_state(state, "Начальное состояние:", stdin);
 
     set_uniform_superposition(state);
-    if (verbose) print_state(state, "После гейта Адамара");
+    if (verbose) print_state(state, "После гейта Адамара", stdin);
 
     save_amps_count(state);
 
@@ -108,7 +108,7 @@ int QgroverAlg(void)
         "Вычисленное количество итераций меньше нуля: r < 0",\
         "Искомый индекс вне диапазона: 0 <= x < N");
     
-    if (verbose) print_state(state, "После алгоритма Гровера");
+    if (verbose) print_state(state, "После алгоритма Гровера", stdin);
     
     printf("Количество итераций: %d\n", r);
 
