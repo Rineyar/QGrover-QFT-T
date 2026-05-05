@@ -86,6 +86,8 @@ int QgroverAlg(void)
 
     start = clock();
 
+    open_amps_file(NULL);
+
     // Алгоритм Гровера
     init_state(state, n, N);
     if (verbose) print_state(state, "Начальное состояние:");
@@ -93,14 +95,19 @@ int QgroverAlg(void)
     set_uniform_superposition(state);
     if (verbose) print_state(state, "После гейта Адамара");
 
+    save_amps_count(state);
+
+    int r = grover_iters(state);
+
+    save_states_count(r+1);
+
     HANDLE(grover_alg(state, x0),\
         "Количество кубит меньше или равно нулю: N <= 0",\
         "Вычисленное количество итераций меньше нуля: r < 0",\
         "Искомый индекс вне диапазона: 0 <= x < N");
     
     if (verbose) print_state(state, "После алгоритма Гровера");
-
-    int r = grover_iters(state);
+    
     printf("Количество итераций: %d\n", r);
 
     // Поиск правильного x
@@ -117,9 +124,6 @@ int QgroverAlg(void)
     // Количество ненулевых состояний
     printf("Ненулевых состояний: %d\n", state->amps.n);
 
-    open_amps_file(NULL);
-    save_amps_count(state);
-    save_amps(state);
     close_amps_file();
 
     clear_state(state); //Чистка состояний

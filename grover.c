@@ -1,4 +1,5 @@
 #include "grover.h"
+#include "measure.h"
 
 int grover_step(State *state, int x0) //Шаг алгоритма гровера
 {
@@ -34,9 +35,13 @@ int grover_alg(State *state, int x0) //Сам алгоритм
     
     int cor = 0; //Проверка
 
+    save_amps(state);
+
     for(int i = 0; i < r; i++) //Шагаем
     {
         cor = grover_step(state,x0); //Шаг
+
+        save_amps(state);
         
         if(cor < 0) //Если ошибка во время выполнения
         {
