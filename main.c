@@ -128,7 +128,7 @@ int QgroverAlg(void)
 
     close_amps_file();
 
-    clear_state(state); //Чистка состояний
+    
     printf("\nВремя выполнения: %lf сек.\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
     return 0; //Успешное завершение программы
@@ -167,7 +167,7 @@ int QFT(State *state)
         //set_pos_to_states_count();
         set_pos_to(pos);
 
-        save_states_count(steps/2);
+        save_states_count(steps+1);
 
         close_amps_file();
 
@@ -181,7 +181,7 @@ int QFT(State *state)
 
         set_pos_to_states_count();
 
-        save_states_count(steps/2);
+        save_states_count(steps+1);
 
         close_amps_file();
     }
@@ -219,6 +219,8 @@ int main(int argc, const char **argv)
             if(command == 2 && state != NULL)
             {
                 clear_state(state);
+                free(state);
+                state = NULL;
             }
             if(command == 1 && state == NULL)
             {
