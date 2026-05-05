@@ -17,3 +17,5 @@ int read_amp_by_idx(const State *state, int idx, complex double *return_amp); //
 int remove_amp_by_i(State *state, int i); //Удаление амплитуды по индексу в массиве
 
 int is_amp_null(const complex double amp); //Является ли амплитуда нулевой
+
+int set_random_state(State* state);

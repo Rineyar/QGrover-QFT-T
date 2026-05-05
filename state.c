@@ -10,6 +10,7 @@ void init_state(State *state, int n, int N) //Инициализация пам�
 {
     state->N = N; //Записать полученные n/N в state
     state->n = n;
+    state->amps.n = 0; //Чистим амплитуды
 
     Amp_Vec_init(&state->amps); //Инициализация вектора амплитуд
 }
@@ -134,4 +135,20 @@ int is_amp_null(const complex double amp) //Проверка на 0
     }
 
     return 0; //Нет
+}
+
+int set_random_state(State* state)
+{
+    for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
+    {
+        Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=rand_double(-1, 1)}); //Добавление амплитуды
+    }
+
+    double norm_sqrt = sqrt(norm_square_amps(state));
+
+    for(int i = 0; i < state->N; i++) {
+        double complex amp;
+        int e = read_amp_by_idx(state, i, &amp);
+        set_amp_by_idx(state, amp / norm_sqrt, i);
+    }
 }
