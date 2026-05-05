@@ -87,6 +87,8 @@ static int fft(State *state, int sign) //Быстрое преобразован
 
         len *= 2; //Увеличение отрезка
     }
+
+    return steps;
 }
 
 static void normalize(State *state) //Нормализация амплитуд

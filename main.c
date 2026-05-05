@@ -167,7 +167,7 @@ int QFT(State *state)
         //set_pos_to_states_count();
         set_pos_to(pos);
 
-        save_states_count(steps/2);
+        save_states_count(steps+1);
 
         close_amps_file();
 
@@ -181,7 +181,7 @@ int QFT(State *state)
 
         set_pos_to_states_count();
 
-        save_states_count(steps/2);
+        save_states_count(steps+1);
 
         close_amps_file();
     }
