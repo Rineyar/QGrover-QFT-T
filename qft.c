@@ -1,4 +1,5 @@
 #include "qft.h"
+#include "measure.h"
 // #include <stdio.h>
 // #include <stdlib.h>
 
@@ -70,13 +71,19 @@ static void fft_step(State *state, int len, int sign) //Шаг FFT
     }
 }
 
-static void fft(State *state, int sign) //Быстрое преобразование Фурье
+static int fft(State *state, int sign) //Быстрое преобразование Фурье
 {
     int len = 2; //Начало с 2х
+
+    int steps = 0;
 
     while(len <= state->N) //Оно будет рости
     {
         fft_step(state,len,sign); //Шагаем
+
+        save_amps(state);
+
+        steps++;
 
         len *= 2; //Увеличение отрезка
     }
@@ -92,22 +99,26 @@ static void normalize(State *state) //Нормализация амплитуд
     }
 }
 
-void qft(State *state) //Квантовое преобразование Фурье
+int qft(State *state) //Квантовое преобразование Фурье
 {
     reverse_amps_by_bit(state); //Перемешать амплитуды
 
-    fft(state,1); //Преобразовать
+    int steps = fft(state,1); //Преобразовать
 
     normalize(state); //Нормализовать
+
+    return steps;
 }
 
-void iqft(State *state) //Аналогично, но у фазы другой знак
+int iqft(State *state) //Аналогично, но у фазы другой знак
 {
     reverse_amps_by_bit(state);
 
-    fft(state,-1);
+    int steps = fft(state,-1);
 
     normalize(state);
+
+    return steps;
 }
 
 // int main(void)

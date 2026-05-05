@@ -58,3 +58,18 @@ void save_states_count(int count)
 {
     fwrite(&count,sizeof(int),1,saved_amps);
 }
+
+void set_pos_to_states_count()
+{
+    fseek(saved_amps,16,SEEK_SET);
+}
+
+long get_file_pos()
+{
+    return ftell(saved_amps);
+}
+
+void set_pos_to(long pos)
+{
+    fseek(saved_amps,pos,SEEK_SET);
+}

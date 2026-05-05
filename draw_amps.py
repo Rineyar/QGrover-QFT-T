@@ -62,7 +62,7 @@ def redraw(mode=None):
     if current_mode == "Probabilities":
         probs = np.pow(np.abs(state),2)
 
-        ax.bar(x,probs)
+        ax.plot(x,probs)
         ax.set_xlabel("Amplitude number")
         ax.set_ylabel("|amplitude|²")
         ax.set_title(f"Probabilities, state {state_id + 1}/{states_count}")
@@ -75,7 +75,7 @@ def redraw(mode=None):
     elif current_mode == "Magnitudes":
         magnitudes = np.abs(state)
 
-        ax.bar(x,magnitudes)
+        ax.plot(x,magnitudes)
         ax.set_xlabel("Amplitude number")
         ax.set_ylabel("|amplitude|")
         ax.set_title(f"Amplitude magnitudes, state {state_id + 1}/{states_count}")
@@ -85,8 +85,8 @@ def redraw(mode=None):
         setup_x_axis()
 
     elif current_mode == "Real / Imag":
-        ax.bar(x - 0.15,state.real,width=0.3,label="Re")
-        ax.bar(x + 0.15,state.imag,width=0.3,label="Im")
+        ax.plot(x - 0.15,state.real,width=0.3,label="Re")
+        ax.plot(x + 0.15,state.imag,width=0.3,label="Im")
 
         ax.set_xlabel("Amplitude number")
         ax.set_ylabel("Value")
@@ -101,7 +101,7 @@ def redraw(mode=None):
 
         mask = np.abs(state) > eps
 
-        ax.bar(x[mask],np.angle(state[mask]))
+        ax.plot(x[mask],np.angle(state[mask]))
 
         ax.set_xlabel("Amplitude number")
         ax.set_ylabel("Phase, radians")

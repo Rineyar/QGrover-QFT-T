@@ -13,3 +13,9 @@ void close_amps_file(); //Закрыть файл
 void save_amps_count(State *state); //Сохранить амплитуды состояния
 
 void save_states_count(int count); //Сохранить кол-во состояний
+
+void set_pos_to_states_count();
+
+long get_file_pos();
+
+void set_pos_to(long pos);

@@ -18,4 +18,4 @@ int remove_amp_by_i(State *state, int i); //Удаление амплитуды 
 
 int is_amp_null(const complex double amp); //Является ли амплитуда нулевой
 
-int set_random_state(State* state);
+// int set_random_state(State* state);

@@ -32,6 +32,7 @@ void clear_state(State *state) //Прочистить -трубы- память
     state->n = state->N = 0; //Убрать n/N
     Amp_Vec_destroy(&state->amps); //Чистить вектор
     free(state);
+    state = NULL;
 }
 
 int search_amp_by_idx(const State *state, int idx) //Поиск амплитуды по индексу
@@ -137,18 +138,18 @@ int is_amp_null(const complex double amp) //Проверка на 0
     return 0; //Нет
 }
 
-int set_random_state(State* state)
-{
-    for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
-    {
-        Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=rand_double(-1, 1)}); //Добавление амплитуды
-    }
+// int set_random_state(State* state)
+// {
+//     for(int i = 0; i < state->N; i++) //Создание неразряженного состояния
+//     {
+//         Amp_Vec_push(&state->amps, (Amp){.idx=i, .amplitude=rand_double(-1, 1)}); //Добавление амплитуды
+//     }
 
-    double norm_sqrt = sqrt(norm_square_amps(state));
+//     double norm_sqrt = sqrt(norm_square_amps(state));
 
-    for(int i = 0; i < state->N; i++) {
-        double complex amp;
-        int e = read_amp_by_idx(state, i, &amp);
-        set_amp_by_idx(state, amp / norm_sqrt, i);
-    }
-}
+//     for(int i = 0; i < state->N; i++) {
+//         double complex amp;
+//         int e = read_amp_by_idx(state, i, &amp);
+//         set_amp_by_idx(state, amp / norm_sqrt, i);
+//     }
+// }
