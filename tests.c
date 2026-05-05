@@ -1,4 +1,28 @@
 #include "tests.h"
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <complex.h>
+#include "functions.h"
+
+#if defined(NDEBUG) //Проверка типа сборки
+#define ASSERTION "disabled"
+#else
+#define ASSERTION "enabled"
+#endif
+
+clock_t start;
+FILE *log_file;
+double eps = 1e-9; // Возможная погрешность double
+
+#define ASSERT(cond, msg)\
+    if (!(cond)) {\
+        fprintf(log_file, "%s FAILED (%0.2lfsec) in %s line %d - %s\n",\
+            test_name, (double)(clock()-test_start)/CLOCKS_PER_SEC, __FILE__, __LINE__, (msg));\
+        fflush(log_file);\
+        return 1;\
+    }
 
 int grover_test(State* state)
 {
@@ -30,7 +54,7 @@ int grover_test(State* state)
     double P = cabs(Pc) * cabs(Pc);
     ASSERT(P > 0.9, "Вероятность слишком низкая: P(x) <= 0.9");
 
-    fprintf(log_file, "OUT: x = %d, P(x) = %lf\n", x, P);
+    fprintf(log_file, "GROVER OUT: x = %d, P(x) = %lf\n", x, P);
     fprintf(log_file, "%s PASSED IN %lfsec\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
 
     // Вывод после каждого теста
