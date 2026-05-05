@@ -128,7 +128,7 @@ int QgroverAlg(void)
 
     close_amps_file();
 
-    clear_state(state); //Чистка состояний
+    
     printf("\nВремя выполнения: %lf сек.\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
     return 0; //Успешное завершение программы
@@ -219,6 +219,8 @@ int main(int argc, const char **argv)
             if(command == 2 && state != NULL)
             {
                 clear_state(state);
+                free(state);
+                state = NULL;
             }
             if(command == 1 && state == NULL)
             {
