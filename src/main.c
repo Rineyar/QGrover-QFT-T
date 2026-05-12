@@ -155,22 +155,24 @@ int QFT(State *state)
 
         save_states_count(steps+2);
 
-        close_amps_file();
-
     } else if(state != NULL)
     {
         save_amps_count(state);
+
+        long pos = get_file_pos();
+
+        save_states_count(0);
 
         save_amps(state);
 
         steps = qft(state);
 
-        set_pos_to_states_count();
+        set_pos_to(pos);
 
         save_states_count(steps+2);
-
-        close_amps_file();
     }
+
+    close_amps_file();
 
     printf("Кол-во шагов: %d\n",steps);
 
