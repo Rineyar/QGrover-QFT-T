@@ -56,20 +56,6 @@ State *state = NULL;
         }\
         break;\
     }   
-    
-
-/*void print_state(State *state, const char* msg) {
-    printf("%s\n", msg);
-    for (int i = 0; i < state->N; ++i) 
-    {
-        double complex amp;
-        read_amp_by_idx(state, i, &amp);
-        double real = creal(amp);
-        double imag = cimag(amp);
-        printf("Амплитуда %d: %g + %gi\n", i, real, imag);
-    }
-    printf("\n");
-}*/
 
 int QgroverAlg(void)
 {
@@ -92,10 +78,11 @@ int QgroverAlg(void)
 
     // Алгоритм Гровера
     init_state(state, n, N);
-    if (verbose) print_state(state, "Начальное состояние:", stdin);
+    printf("%d\n", verbose);
+    if (verbose) print_state(state, "Начальное состояние:", stdout);
 
     set_uniform_superposition(state);
-    if (verbose) print_state(state, "После гейта Адамара", stdin);
+    if (verbose) print_state(state, "После гейта Адамара", stdout);
 
     save_amps_count(state);
 
@@ -108,7 +95,7 @@ int QgroverAlg(void)
         "Вычисленное количество итераций меньше нуля: r < 0",\
         "Искомый индекс вне диапазона: 0 <= x < N");
     
-    if (verbose) print_state(state, "После алгоритма Гровера", stdin);
+    if (verbose) print_state(state, "После алгоритма Гровера", stdout);
     
     printf("Количество итераций: %d\n", r);
 
@@ -127,7 +114,6 @@ int QgroverAlg(void)
     printf("Ненулевых состояний: %d\n", state->amps.n);
 
     close_amps_file();
-
     
     printf("\nВремя выполнения: %lf сек.\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
@@ -194,50 +180,60 @@ int QFT(State *state)
 
 int main(int argc, const char **argv)
 {
-    
+    // TODO 
+    // обратный QFT
+    // README
+    // запуск скрипта питона
+    // ручной ввод амплитуд
     setlocale(LC_ALL, "ru_RU.UTF-8");
     
     if (argc == 2 && strcmp(argv[1], "-v") == 0) {
         verbose = 1;
     }
-    printf("verbose: %d\n", verbose); // Не читается
+    printf("verbose: %d\n", verbose);
 
     puts("\n======= КВАНТОВЫЕ АЛГОРИТМЫ =======");
-    INTINPUT(1, 4, &command, \
-    "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[-1] - Выход\n\nВвод: ");
     
-    while(1)
+    while(1) 
     {
+        INTINPUT(1, 4, &command, \
+            "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[4] - Вывод графика\n[-1] - Выход\n\nВвод: ");
         switch (command)
         {
-        case 1:
-            QgroverAlg();
-            INTINPUT(1, 4, &command, \
-        "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[-1] - Выход\n\nВвод: ");
-            break;
-        case 2:
-            INTINPUT(1, 2, &command, \
-        "\n> Состояние:\n\n[1] - Определено\n[2] - Не определено (NULL)\n\nВвод: ");
-            if(command == 2 && state != NULL)
-            {
-                clear_state(state);
-                free(state);
-                state = NULL;
-            }
-            if(command == 1 && state == NULL)
-            {
-                printf("Нахуй иди умник\n=====================\n");
+            case 1:
+                QgroverAlg();
                 break;
-            }
-            QFT(state);
-            INTINPUT(1, 4, &command, \
-        "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[-1] - Выход\n\nВвод: ");
-            break;
-        case -1:
-            return 0;
-        default:
-            break;
+
+            case 2:
+                INTINPUT(1, 2, &command, \
+                    "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Очистить состояние (NULL)\n\nВвод: ");
+
+                if(command == 1 && state == NULL)
+                {
+                    printf("Состояние не определено\n=====================\n");
+                    break;
+                }
+                if(command == 2 && state != NULL)
+                {
+                    clear_state(state);
+                    free(state);
+                    state = NULL;
+                }
+                QFT(state);
+
+                break;
+            
+            case 4:
+                system("python ./visual/draw_amps.py");
+                break;
+
+            case -1:
+                return 0;
+
+            default:
+                break;
         }
     }
+
     return 0;
 }
