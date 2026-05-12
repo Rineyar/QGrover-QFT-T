@@ -8,3 +8,4 @@ QuantAlgTest
 .build/
 build/
 saved_amps.bin
+*.out
