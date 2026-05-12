@@ -164,6 +164,16 @@ int set_random_state(State* state)
         set_amp_by_idx(state, amp / norm_sqrt, i);
     }
 }
+void set_state_manually(State *state) {
+    for(int i = 0; i < state->N; i++) {
+        printf("Введите амплитуду %d в формате: целая мнимая:", i + 1);
+        double complex amp;
+        
+        scanf("%lf %lf", &(__real__ amp), &(__imag__ amp));
+        
+        set_amp_by_idx(state, 1, i);
+    }
+}
 
 void print_state(State *state, const char* msg, FILE* file)
 { 

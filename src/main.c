@@ -182,9 +182,6 @@ int main(int argc, const char **argv)
 {
     // TODO 
     // обратный QFT
-    // README
-    // запуск скрипта питона
-    // ручной ввод амплитуд
     setlocale(LC_ALL, "ru_RU.UTF-8");
     
     if (argc == 2 && strcmp(argv[1], "-v") == 0) {
@@ -205,21 +202,49 @@ int main(int argc, const char **argv)
                 break;
 
             case 2:
-                INTINPUT(1, 2, &command, \
-                    "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Очистить состояние (NULL)\n\nВвод: ");
+                INTINPUT(1, 3, &command, \
+                    "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Ввести состояние вручную\n[3] - Задать рандомное состояние\nВвод: ");
 
-                if(command == 1 && state == NULL)
+                if(command == 1)
                 {
-                    printf("Состояние не определено\n=====================\n");
-                    break;
+                    if (state == NULL) {
+                        printf("Состояние не определено. Попробуйте снова\n=====================\n");
+                        break;
+                    }
                 }
-                if(command == 2 && state != NULL)
+                if(command == 2)
                 {
                     clear_state(state);
-                    free(state);
+                    if (state) free(state);
                     state = NULL;
+
+                    int n = 0; // Число кубитов (1 >= n >= 20) 
+                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
+                    int N = 2 << (n - 1); // Количество элементов
+
+                    state = malloc(sizeof(State));
+                    init_state(state, n, N);
+
+                    set_state_manually(state);
                 }
+                if (command == 3)
+                {
+                    clear_state(state);
+                    if (state) free(state);
+                    state = NULL;
+
+                    int n = 0; // Число кубитов (1 >= n >= 20) 
+                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
+                    int N = 2 << (n - 1); // Количество элементов
+
+                    state = malloc(sizeof(State));
+                    init_state(state, n, N);
+
+                    set_random_state(state);
+                }
+
                 QFT(state);
+                if (verbose) print_state(state, "После алгоритма Преобразование Фурье", stdout);
 
                 break;
             

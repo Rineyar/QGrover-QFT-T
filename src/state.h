@@ -22,6 +22,8 @@ int is_amp_null(const complex double amp); //Является ли амплит�
 
 double rand_double(double min, double max); // Функция для генерации случайного double в диапазоне [min, max]
 
+void set_state_manually(State *state);
+
 int set_random_state(State* state); // Создание случайного состояния амплитуд
 
 void print_state(State *state, const char* msg, FILE* file); // Вывод всех амплитуд
