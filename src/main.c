@@ -16,7 +16,7 @@ clock_t start;
 
 State *state = NULL;
 
-// Обработчик ошибок (возможно стоит объявить в другом месте. Нуждается в тестах)
+// Обработчик ошибок
 #define HANDLE(err, c1, c2, c3)\
     switch (err)\
     {\
@@ -187,6 +187,8 @@ int QFT(State *state)
     }
 
     printf("Кол-во шагов: %d\n",steps);
+
+    return 0;
 }
 
 
