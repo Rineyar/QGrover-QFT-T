@@ -243,11 +243,60 @@ int main(int argc, const char **argv)
                     set_random_state(state);
                 }
 
+                if (verbose) print_state(state, "До алгоритма Преобразование Фурье", stdout);
                 QFT(state);
                 if (verbose) print_state(state, "После алгоритма Преобразование Фурье", stdout);
 
                 break;
-            
+
+            case 3:
+                INTINPUT(1, 3, &command, \
+                    "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Ввести состояние вручную\n[3] - Задать рандомное состояние\nВвод: ");
+
+                if(command == 1)
+                {
+                    if (state == NULL) {
+                        printf("Состояние не определено. Попробуйте снова\n=====================\n");
+                        break;
+                    }
+                }
+                if(command == 2)
+                {
+                    clear_state(state);
+                    if (state) free(state);
+                    state = NULL;
+
+                    int n = 0; // Число кубитов (1 >= n >= 20) 
+                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
+                    int N = 2 << (n - 1); // Количество элементов
+
+                    state = malloc(sizeof(State));
+                    init_state(state, n, N);
+
+                    set_state_manually(state);
+                }
+                if (command == 3)
+                {
+                    clear_state(state);
+                    if (state) free(state);
+                    state = NULL;
+
+                    int n = 0; // Число кубитов (1 >= n >= 20) 
+                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
+                    int N = 2 << (n - 1); // Количество элементов
+
+                    state = malloc(sizeof(State));
+                    init_state(state, n, N);
+
+                    set_random_state(state);
+                }
+
+                if (verbose) print_state(state, "До алгоритма Обратного Преобразование Фурье", stdout);
+                iqft(state);
+                if (verbose) print_state(state, "После алгоритма Обратного Преобразование Фурье", stdout);
+
+                break;
+
             case 4:
                 system("python ./visual/draw_amps.py");
                 break;
