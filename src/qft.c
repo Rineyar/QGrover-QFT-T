@@ -109,6 +109,8 @@ int qft(State *state) //Квантовое преобразование Фурь
 
     normalize(state); //Нормализовать
 
+    save_amps(state);
+
     return steps;
 }
 
@@ -119,6 +121,8 @@ int iqft(State *state) //Аналогично, но у фазы другой з�
     int steps = fft(state,-1);
 
     normalize(state);
+
+    save_amps(state);
 
     return steps;
 }
