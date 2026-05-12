@@ -3,6 +3,7 @@
 #define NAME Amp_Vec
 #include "vector/array_def.h"
 #include <stdlib.h>
+#include "macros.h"
 
 #define EPS 1e-10
 
@@ -147,6 +148,10 @@ double rand_double(double min, double max) {
 
 int set_random_state(State* state)
 {
+    if (state == NULL) {
+        return -1;
+    }
+    set_empty_state(state);
     // Каждая амплитуда - рандомное число типа double в диапазоне [-1, 1]
     for(int i = 0; i < state->N; i++)
     {
@@ -165,18 +170,34 @@ int set_random_state(State* state)
     }
 }
 void set_state_manually(State *state) {
+    set_empty_state(state);
     for(int i = 0; i < state->N; i++) {
         printf("Введите амплитуду %d в формате: целая мнимая:", i + 1);
         double complex amp;
         
         scanf("%lf %lf", &(__real__ amp), &(__imag__ amp));
         
-        set_amp_by_idx(state, 1, i);
+        set_amp_by_idx(state, amp, i);
     }
 }
 
-void print_state(State *state, const char* msg, FILE* file)
+int set_empty_state(State *state)
+{
+    int n = 0; // Число кубитов (1 >= n >= 20) 
+    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
+    int N = 2 << (n - 1); // Количество элементов
+
+    clear_state(state);
+    init_state(state, n, N);
+
+    return 0;
+}
+
+int print_state(State *state, const char* msg, FILE* file)
 { 
+    if (state == NULL) {
+        return -1;
+    }
     fprintf(file, "%s\n", msg);               
     for (int i = 0; i < state->N; ++i) 
     {

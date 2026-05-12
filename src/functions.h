@@ -5,3 +5,4 @@
 #include "grover.h"
 #include "measure.h"
 #include "qft.h"
+#include "macros.h"

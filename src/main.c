@@ -10,55 +10,15 @@
 
 int verbose = 0; // Выводить состояния амплитуд? (не работает)
 int command = 0; // Вызываемая функция
-char* func_name = NULL; // Имя функции для обработчика ошибок. Если будет время, можно реализовать
-                 // стеком для возможности полностью проследить, откуда ошибка пошла
+char* func_name = NULL; // Имя функции для обработчика ошибок. 
 clock_t start;
 
 State *state = NULL;
 
-// Обработчик ошибок
-#define HANDLE(err, c1, c2, c3)\
-    switch (err)\
-    {\
-    case -1:\
-        printf("OШИБКА в %s %s строка %d (%0.2lfsec) - %s\n",\
-            __FILE__, func_name, __LINE__, (double)(clock()-start)/CLOCKS_PER_SEC, (c1));\
-            return -1;\
-    case -2:\
-        printf("OШИБКА в %s %s строка %d (%0.2lfsec) - %s\n",\
-            __FILE__, func_name, __LINE__, (double)(clock()-start)/CLOCKS_PER_SEC, (c2));\
-            return -2;\
-    case -3:\
-        printf("OШИБКА в %s %s строка %d (%0.2lfsec) - %s\n",\
-            __FILE__, func_name, __LINE__, (double)(clock()-start)/CLOCKS_PER_SEC, (c3));\
-            return -3;\
-    default:\
-        break;;\
-    }
-
-// Пользовательский ввод. Число в диапазоне [min, max] записываем в addr. -1 -- экстренный выход
-#define INTINPUT(min, max, addr, msg, ...)\
-    printf((msg), ##__VA_ARGS__);\
-    while(1)\
-    {\
-        if (scanf("%d", (addr)) != 1) {\
-            while (getchar() != '\n'){\
-                printf("Неверный ввод. Попробуйте ещё раз\nВвод: ");\
-            }\
-            continue;\
-        }\
-        if (*(addr) < (min) || *(addr) > (max)) {\
-            if (*(addr)==-1){\
-            return 0;}\
-            else{\
-            printf("Число вне допустимого диапазона. Попробуйте ещё раз\nВвод: ");}\
-            continue;\
-        }\
-        break;\
-    }   
-
 int QgroverAlg(void)
 {
+    func_name = "Grover";
+
     puts("\n======= АЛГОРИТМ ГРОВЕРА =======\n");
     state = malloc(sizeof(State));
 
@@ -120,41 +80,19 @@ int QgroverAlg(void)
     return 0; //Успешное завершение программы
 }
 
-int QFT(State *state)
+int QFT(State *state, int is_reverse)
 {
+    func_name = "QFT";
+    if (is_reverse) puts("\n======= Обратное Преобразование Фурье =======");
+    if (!is_reverse) puts("\n======= Преобразование Фурье =======");
+
     open_amps_file(NULL);
 
     int steps = 0;
 
     if(state == NULL)
     {
-        state = malloc(sizeof(State));
-
-        int n = 0; // Число кубитов (1 >= n >= 20) 
-        INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
-
-        int N = 2 << (n - 1); // Количество элементов
-
-        init_state(state,n,N);
-
-        //set_random_state(state);
-        set_uniform_superposition(state);
-
-        save_amps_count(state);
-
-        long pos = get_file_pos();
-
-        save_states_count(0);
-
-        save_amps(state);
-
-        steps = qft(state);
-
-        //set_pos_to_states_count();
-        set_pos_to(pos);
-
-        save_states_count(steps+2);
-
+        return -1;
     } else if(state != NULL)
     {
         save_amps_count(state);
@@ -165,7 +103,7 @@ int QFT(State *state)
 
         save_amps(state);
 
-        steps = qft(state);
+        steps = is_reverse ? iqft(state) : qft(state);
 
         set_pos_to(pos);
 
@@ -182,9 +120,9 @@ int QFT(State *state)
 
 int main(int argc, const char **argv)
 {
-    // TODO 
-    // обратный QFT
     setlocale(LC_ALL, "ru_RU.UTF-8");
+    func_name = "main";
+    state = calloc(1, sizeof(State));
     
     if (argc == 2 && strcmp(argv[1], "-v") == 0) {
         verbose = 1;
@@ -200,10 +138,14 @@ int main(int argc, const char **argv)
         switch (command)
         {
             case 1:
-                QgroverAlg();
+                HANDLE(QgroverAlg(),
+                    "1",
+                    "2",
+                    "3");
                 break;
 
             case 2:
+                command = -1;
                 INTINPUT(1, 3, &command, \
                     "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Ввести состояние вручную\n[3] - Задать рандомное состояние\nВвод: ");
 
@@ -215,42 +157,21 @@ int main(int argc, const char **argv)
                     }
                 }
                 if(command == 2)
-                {
-                    clear_state(state);
-                    if (state) free(state);
-                    state = NULL;
-
-                    int n = 0; // Число кубитов (1 >= n >= 20) 
-                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
-                    int N = 2 << (n - 1); // Количество элементов
-
-                    state = malloc(sizeof(State));
-                    init_state(state, n, N);
-
                     set_state_manually(state);
-                }
                 if (command == 3)
-                {
-                    clear_state(state);
-                    if (state) free(state);
-                    state = NULL;
-
-                    int n = 0; // Число кубитов (1 >= n >= 20) 
-                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
-                    int N = 2 << (n - 1); // Количество элементов
-
-                    state = malloc(sizeof(State));
-                    init_state(state, n, N);
-
-                    set_random_state(state);
-                }
+                    HANDLE(set_random_state(state),
+                        "состояние не определено",
+                        "2",
+                        "3");
 
                 if (verbose) print_state(state, "До алгоритма Преобразование Фурье", stdout);
-                QFT(state);
+                HANDLE(QFT(state, 0),
+                    "состояние не определено",
+                    "None",
+                    "None");
                 if (verbose) print_state(state, "После алгоритма Преобразование Фурье", stdout);
 
                 break;
-
             case 3:
                 INTINPUT(1, 3, &command, \
                     "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Ввести состояние вручную\n[3] - Задать рандомное состояние\nВвод: ");
@@ -263,38 +184,18 @@ int main(int argc, const char **argv)
                     }
                 }
                 if(command == 2)
-                {
-                    clear_state(state);
-                    if (state) free(state);
-                    state = NULL;
-
-                    int n = 0; // Число кубитов (1 >= n >= 20) 
-                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
-                    int N = 2 << (n - 1); // Количество элементов
-
-                    state = malloc(sizeof(State));
-                    init_state(state, n, N);
-
                     set_state_manually(state);
-                }
                 if (command == 3)
-                {
-                    clear_state(state);
-                    if (state) free(state);
-                    state = NULL;
-
-                    int n = 0; // Число кубитов (1 >= n >= 20) 
-                    INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
-                    int N = 2 << (n - 1); // Количество элементов
-
-                    state = malloc(sizeof(State));
-                    init_state(state, n, N);
-
-                    set_random_state(state);
-                }
+                    HANDLE(set_random_state(state),
+                        "состояние не определено",
+                        "2",
+                        "3");
 
                 if (verbose) print_state(state, "До алгоритма Обратного Преобразование Фурье", stdout);
-                iqft(state);
+                HANDLE(QFT(state, 1),
+                    "Состояние не определено",
+                    "None",
+                    "None");
                 if (verbose) print_state(state, "После алгоритма Обратного Преобразование Фурье", stdout);
 
                 break;

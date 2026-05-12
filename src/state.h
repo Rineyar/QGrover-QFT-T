@@ -24,6 +24,8 @@ double rand_double(double min, double max); // Функция для генер�
 
 void set_state_manually(State *state);
 
+int set_empty_state(State *state);
+
 int set_random_state(State* state); // Создание случайного состояния амплитуд
 
-void print_state(State *state, const char* msg, FILE* file); // Вывод всех амплитуд
+int print_state(State *state, const char* msg, FILE* file); // Вывод всех амплитуд

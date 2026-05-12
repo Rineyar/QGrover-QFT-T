@@ -115,7 +115,7 @@ int qft_BStest(State* state, int ver)
 
             cur = cabs(cur);
 
-            ASSERT(fabs(cur - exp) <= eps, "Амплитуды не соответствуют ожидаемым");
+            ASSERT(cabs(cur - exp) <= eps, "Амплитуды не соответствуют ожидаемым");
         }
 
         // Проверка фаз 
@@ -131,7 +131,7 @@ int qft_BStest(State* state, int ver)
             read_amp_by_idx(state, j, &cur);
             double phase = carg(cur);
 
-            double diff = fabs(phase - exp);
+            double diff = cabs(phase - exp);
             // Учитываем скачок на границе π/-π
             if (diff > M_PI) diff = 2.0 * M_PI - diff;
             ASSERT(diff <= eps, "Фаза не соответствует ожидаемой");
