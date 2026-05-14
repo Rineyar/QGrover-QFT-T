@@ -20,6 +20,14 @@ int QgroverAlg(void)
     func_name = "Grover";
 
     puts("\n======= АЛГОРИТМ ГРОВЕРА =======\n");
+
+    if(state != NULL)
+    {
+        clear_state(state);
+
+        free(state);
+    }
+
     state = malloc(sizeof(State));
 
     int n = 0; // Число кубитов (1 >= n >= 20) 
