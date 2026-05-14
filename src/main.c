@@ -220,5 +220,11 @@ int main(int argc, const char **argv)
         }
     }
 
+    if(state != NULL)
+    {
+        clear_state(state);
+        free(state);
+    }
+
     return 0;
 }
