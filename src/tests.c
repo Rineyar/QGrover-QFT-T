@@ -1,10 +1,13 @@
-#include "tests.h"
-#include <time.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
-#include <complex.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+
 #include "functions.h"
+#include "types.h"
+#include "tests.h"
 
 #if defined(NDEBUG) //Проверка типа сборки
 #define ASSERTION "disabled"
@@ -205,6 +208,7 @@ int qft_rand_test(State* state, int ver)
 
 int main(void)
 {
+    setlocale(LC_ALL, "ru_RU.UTF-8");
     log_file = fopen("log_file.txt","w");
     start = clock();
 
