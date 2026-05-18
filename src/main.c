@@ -68,7 +68,7 @@ int QgroverAlg(void)
         save_states_count(r+1);
     }
 
-    HANDLE(grover_alg(state, x0),\
+    HANDLE(grover_alg(state, x0, save_amps_to_file),\
         "Количество кубит меньше или равно нулю: N <= 0",\
         "Вычисленное количество итераций меньше нуля: r < 0",\
         "Искомый индекс вне диапазона: 0 <= x < N");
@@ -129,14 +129,14 @@ int QFT(State *state, int is_reverse)
             save_amps(state);
         }
 
-        steps = is_reverse ? iqft(state) : qft(state);
+        steps = is_reverse ? iqft(state, save_amps_to_file) : qft(state, save_amps_to_file);
 
         if(save_amps_to_file)
         {
             set_pos_to(pos);
 
             save_states_count(steps+2);
-            
+
             close_amps_file();
         }
     }

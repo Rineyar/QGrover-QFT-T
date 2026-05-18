@@ -8,4 +8,4 @@ int grover_step(State *state, int x0); //Один шаг алгоритма Гр
 
 int grover_iters(State *state); //Получить кол-во итераций Гровера
 
-int grover_alg(State *state, int x0); //Алгоритм Гровера
+int grover_alg(State *state, int x0, int save_amps_to_file); //Алгоритм Гровера

@@ -25,7 +25,7 @@ int grover_iters(State *state) //Кол-во итераций
     return r; //Возврат
 }
 
-int grover_alg(State *state, int x0) //Сам алгоритм
+int grover_alg(State *state, int x0, int save_amps_to_file) //Сам алгоритм
 {
     //func_name = "grover_alg";
     
@@ -41,7 +41,10 @@ int grover_alg(State *state, int x0) //Сам алгоритм
     {
         cor = grover_step(state,x0); //Шаг
 
-        save_amps(state);
+        if(save_amps_to_file)
+        {
+            save_amps(state);
+        }
         
         if(cor < 0) //Если ошибка во время выполнения
         {

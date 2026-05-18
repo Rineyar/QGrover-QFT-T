@@ -71,7 +71,7 @@ static void fft_step(State *state, int len, int sign) //Шаг FFT
     }
 }
 
-static int fft(State *state, int sign) //Быстрое преобразование Фурье
+static int fft(State *state, int sign, int save_amps_to_file) //Быстрое преобразование Фурье
 {
     int len = 2; //Начало с 2х
 
@@ -81,7 +81,10 @@ static int fft(State *state, int sign) //Быстрое преобразован
     {
         fft_step(state,len,sign); //Шагаем
 
-        save_amps(state);
+        if(save_amps_to_file)
+        {
+            save_amps(state);
+        }
 
         steps++;
 
@@ -101,28 +104,34 @@ static void normalize(State *state) //Нормализация амплитуд
     }
 }
 
-int qft(State *state) //Квантовое преобразование Фурье
+int qft(State *state, int save_amps_to_file) //Квантовое преобразование Фурье
 {
     reverse_amps_by_bit(state); //Перемешать амплитуды
 
-    int steps = fft(state,1); //Преобразовать
+    int steps = fft(state,1,save_amps_to_file); //Преобразовать
 
     normalize(state); //Нормализовать
 
-    save_amps(state);
+    if(save_amps_to_file)
+    {
+        save_amps(state);
+    }
 
     return steps;
 }
 
-int iqft(State *state) //Аналогично, но у фазы другой знак
+int iqft(State *state, int save_amps_to_file) //Аналогично, но у фазы другой знак
 {
     reverse_amps_by_bit(state);
 
-    int steps = fft(state,-1);
+    int steps = fft(state,-1,save_amps_to_file);
 
     normalize(state);
 
-    save_amps(state);
+    if(save_amps_to_file)
+    {
+        save_amps(state);
+    }
 
     return steps;
 }
