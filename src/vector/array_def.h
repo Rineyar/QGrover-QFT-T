@@ -23,8 +23,12 @@ void CAT(NAME,_init)(NAME *vec)
 // note: this function can be called many times
 void CAT(NAME,_destroy)(NAME *vec)
 {
-    free(vec->arr);
-    vec->arr = NULL;
+    if(vec->arr != NULL)
+    {
+        free(vec->arr);
+        vec->arr = NULL;
+    }
+    
     vec->n = 0;
     vec->cap = 0;
 }

@@ -1,4 +1,3 @@
-#include <complex.h>
 #include <stdio.h>
 #include <assert.h>
 #include <time.h>
@@ -7,6 +6,7 @@
 #include <locale.h>
 
 #include "functions.h"
+#include "types.h"
 
 int verbose = 0; // Выводить состояния амплитуд? (не работает)
 int command = 0; // Вызываемая функция
@@ -21,10 +21,10 @@ int QgroverAlg(void)
 
     puts("\n======= АЛГОРИТМ ГРОВЕРА =======\n");
 
+    clear_state(state);
+
     if(state != NULL)
     {
-        clear_state(state);
-
         free(state);
     }
 
@@ -186,7 +186,7 @@ int main(int argc, const char **argv)
 
                 if(command == 1)
                 {
-                    if (state == NULL) {
+                    if (state == NULL || state->N == 0 || state->n == 0 || state->amps.arr == NULL) {
                         printf("Состояние не определено. Попробуйте снова\n=====================\n");
                         break;
                     }
@@ -220,9 +220,10 @@ int main(int argc, const char **argv)
         }
     }
 
+    clear_state(state);
+
     if(state != NULL)
     {
-        clear_state(state);
         free(state);
     }
 
