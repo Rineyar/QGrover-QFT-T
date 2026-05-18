@@ -162,8 +162,18 @@ int main(int argc, const char **argv)
     
     while(1) 
     {
-        INTINPUT(1, 5, &command, \
+        if(save_amps_to_file == 0)
+        {
+            INTINPUT(1, 5, &command, \
             "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[4] - Вывод графика\n[5] - Сохранять амплитуды в файл\n[-1] - Выход\n\nВвод: ");
+        } 
+        else 
+        {
+            INTINPUT(1, 5, &command, \
+            "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[4] - Вывод графика\n[5] - Не сохранять амплитуды в файл\n[-1] - Выход\n\nВвод: ");
+        }
+        
+
         switch (command)
         {
             case 1:
@@ -238,9 +248,14 @@ int main(int argc, const char **argv)
                 if(save_amps_to_file == 0)
                 {
                     save_amps_to_file = 1;
-                } else {
+                    printf("Амплитуды будут сохраняться!\n");
+                } 
+                else 
+                {
                     save_amps_to_file = 0;
+                    printf("Сохранение амплитуд отключено!\n");
                 }
+                break;
 
             case -1:
                 return 0;
