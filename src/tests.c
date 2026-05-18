@@ -46,7 +46,7 @@ int grover_test(State* state)
     // Установка стартовой амплитуды 1/sqrt(N)
     set_uniform_superposition(state); 
 
-    int e = grover_alg(state, x);
+    int e = grover_alg(state, x, 0);
     ASSERT(e != -1, "Количество кубит меньше или равно нулю: N <= 0"); // Совершенно бесполезно, тк зависит от n, определяемого при тестировании
     ASSERT(e != -2, "Вычисленное количество итераций меньше нуля: r < 0"); 
     ASSERT(e != -3, "Искомый индекс вне диапазона: 0 <= x < N"); // Тоже самое
@@ -95,7 +95,7 @@ int qft_BStest(State* state, int ver)
             print_state(state, "> Before QFT:", log_file);
         }
 
-        qft(state);
+        qft(state, 0);
 
         if (ver==1) 
         {
@@ -177,7 +177,7 @@ int qft_rand_test(State* state, int ver)
         read_amp_by_idx(state, i, &mem[i]);
     }
 
-    qft(state);
+    qft(state, 0);
 
     if (ver==1) 
     {
@@ -189,7 +189,7 @@ int qft_rand_test(State* state, int ver)
     double diff = fabs(norm - 1);
     ASSERT(diff <= eps, "Норма не сохраняется");
 
-    iqft(state);
+    iqft(state, 0);
 
     // Проверяем iqft
     for (int i = 0; i < N; ++i)
