@@ -5,7 +5,8 @@ int oracle(State *state, int x0) //Оракул, он меняет + на - и �
 {
     //func_name = "oracle";
 
-    int i = search_amp_by_idx(state,x0); //Получение индекса
+    //int i = search_amp_by_idx(state,x0); //Получение индекса
+    int i = x0;
 
     if(i == -1) //Если ошибка
     {
