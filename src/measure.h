@@ -9,7 +9,7 @@ int rand_return_x0(State *state/*, double *u_return*/); //Вернуть инд�
 
 void save_amps(State *state); //Сохранить амплитуды в файл
 
-void open_amps_file(const char *filename); //Открыть файл, где их хранить нужно
+void open_amps_file(); //Открыть файл, где их хранить нужно
 
 void close_amps_file(); //Закрыть файл
 

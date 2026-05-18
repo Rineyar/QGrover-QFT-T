@@ -10,6 +10,7 @@
 
 int verbose = 0; // Выводить состояния амплитуд? (не работает)
 int command = 0; // Вызываемая функция
+int save_amps_to_file = 0;
 char* func_name = NULL; // Имя функции для обработчика ошибок. 
 clock_t start;
 
@@ -28,7 +29,7 @@ int QgroverAlg(void)
         free(state);
     }
 
-    state = malloc(sizeof(State));
+    state = calloc(1, sizeof(State));
 
     int n = 0; // Число кубитов (1 >= n >= 20) 
     INTINPUT(1, 20, &n, "Введите необходимое число кубитов (1-20)\nВвод: ");
@@ -42,7 +43,10 @@ int QgroverAlg(void)
 
     start = clock();
 
-    open_amps_file(NULL);
+    if(save_amps_to_file)
+    {
+        open_amps_file();
+    }
 
     // Алгоритм Гровера
     init_state(state, n, N);
@@ -52,11 +56,17 @@ int QgroverAlg(void)
     set_uniform_superposition(state);
     if (verbose) print_state(state, "После гейта Адамара", stdout);
 
-    save_amps_count(state);
+    if(save_amps_to_file)
+    {
+        save_amps_count(state);
+    }
 
     int r = grover_iters(state);
 
-    save_states_count(r+1);
+    if(save_amps_to_file)
+    {
+        save_states_count(r+1);
+    }
 
     HANDLE(grover_alg(state, x0),\
         "Количество кубит меньше или равно нулю: N <= 0",\
@@ -81,7 +91,10 @@ int QgroverAlg(void)
     // Количество ненулевых состояний
     printf("Ненулевых состояний: %d\n", state->amps.n);
 
-    close_amps_file();
+    if(save_amps_to_file)
+    {
+        close_amps_file();
+    }
     
     printf("\nВремя выполнения: %lf сек.\n",((double)(clock()-start))/CLOCKS_PER_SEC); //Вывод времени работы
 
@@ -94,31 +107,39 @@ int QFT(State *state, int is_reverse)
     if (is_reverse) puts("\n======= Обратное Преобразование Фурье =======");
     if (!is_reverse) puts("\n======= Преобразование Фурье =======");
 
-    open_amps_file(NULL);
-
     int steps = 0;
+
+    long pos = 0;
 
     if(state == NULL)
     {
         return -1;
     } else if(state != NULL)
     {
-        save_amps_count(state);
+        if(save_amps_to_file)
+        {
+            open_amps_file();
+        
+            save_amps_count(state);
 
-        long pos = get_file_pos();
+            pos = get_file_pos();
 
-        save_states_count(0);
+            save_states_count(0);
 
-        save_amps(state);
+            save_amps(state);
+        }
 
         steps = is_reverse ? iqft(state) : qft(state);
 
-        set_pos_to(pos);
+        if(save_amps_to_file)
+        {
+            set_pos_to(pos);
 
-        save_states_count(steps+2);
+            save_states_count(steps+2);
+            
+            close_amps_file();
+        }
     }
-
-    close_amps_file();
 
     printf("Кол-во шагов: %d\n",steps);
 
@@ -141,8 +162,8 @@ int main(int argc, const char **argv)
     
     while(1) 
     {
-        INTINPUT(1, 4, &command, \
-            "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[4] - Вывод графика\n[-1] - Выход\n\nВвод: ");
+        INTINPUT(1, 5, &command, \
+            "\n> Выберите алгоритм:\n\n[1] - Алгоритм Гровера\n[2] - Преобразование Фурье\n[3] - Обратное преобразование Фурье\n[4] - Вывод графика\n[5] - Сохранять амплитуды в файл\n[-1] - Выход\n\nВвод: ");
         switch (command)
         {
             case 1:
@@ -211,6 +232,15 @@ int main(int argc, const char **argv)
             case 4:
                 system("python ./visual/draw_amps.py");
                 break;
+            
+            case 5:
+                
+                if(save_amps_to_file == 0)
+                {
+                    save_amps_to_file = 1;
+                } else {
+                    save_amps_to_file = 0;
+                }
 
             case -1:
                 return 0;

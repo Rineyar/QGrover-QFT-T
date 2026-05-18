@@ -24,14 +24,9 @@ int rand_return_x0(State *state/*, double *u_return*/) //Возвращает и
 
 static FILE *saved_amps = NULL;
 
-void open_amps_file(const char *filename)
+void open_amps_file()
 {
-    if(filename == NULL)
-    {
-        saved_amps = fopen("saved_amps.bin","wb");
-    } else {
-        saved_amps = fopen(filename,"wb");
-    }
+    saved_amps = fopen("saved_amps.bin","wb");
 }
 
 void close_amps_file()
