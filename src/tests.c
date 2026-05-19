@@ -113,8 +113,7 @@ int qft_BStest(State* state, int ver)
 
         for (int j = 0; j < N; ++j)
         {
-            double complex cur;
-            read_amp_by_idx(state, j, &cur);
+            double complex cur = state->amps.arr[j].amplitude;
 
             cur = cabs(cur);
 
@@ -130,8 +129,7 @@ int qft_BStest(State* state, int ver)
             if (creal(exp) > M_PI) exp -= 2.0 * M_PI;
             if (creal(exp) <= -M_PI) exp += 2.0 * M_PI;
 
-            double complex cur;
-            read_amp_by_idx(state, j, &cur);
+            double complex cur = state->amps.arr[j].amplitude;
             double phase = carg(cur);
 
             double diff = cabs(phase - exp);
@@ -174,7 +172,7 @@ int qft_rand_test(State* state, int ver)
     double complex* mem = malloc(sizeof(double complex) * N);
     for (int i = 0; i < N; ++i)
     {
-        read_amp_by_idx(state, i, &mem[i]);
+        mem[i] = state->amps.arr[i].amplitude;
     }
 
     qft(state, 0);
@@ -194,8 +192,7 @@ int qft_rand_test(State* state, int ver)
     // Проверяем iqft
     for (int i = 0; i < N; ++i)
     {
-        double complex amp;
-        read_amp_by_idx(state, i, &amp);
+        double complex amp = state->amps.arr[i].amplitude;
         double diff_re = fabs(creal(amp)-creal(mem[i]));
         double diff_im = fabs(cimag(amp)-cimag(mem[i]));
         ASSERT(diff_re <= eps && diff_im <= eps, "Ошибка с обратным Фурье");
@@ -203,6 +200,7 @@ int qft_rand_test(State* state, int ver)
     free(mem);
 
     fprintf(log_file, "%s PASSED IN %lfsec\n", test_name, ((double)(clock()-test_start))/CLOCKS_PER_SEC);
+    fflush(log_file);  // Вывод после каждого теста
     return 0;
 }
 

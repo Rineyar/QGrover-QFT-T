@@ -195,15 +195,19 @@ int main(int argc, const char **argv)
                         break;
                     }
                 }
-                if(command == 2)
+                if(command == 2) 
+                {
                     set_empty_state(state);
                     set_state_manually(state);
+                }
                 if (command == 3)
+                {
                     set_empty_state(state);
                     HANDLE(set_random_state(state),
                         "состояние не определено",
                         "2",
                         "3");
+                }
 
                 if (verbose) print_state(state, "До алгоритма Преобразование Фурье", stdout);
                 HANDLE(QFT(state, 0),
@@ -214,6 +218,7 @@ int main(int argc, const char **argv)
 
                 break;
             case 3:
+                command = -1;
                 INTINPUT(1, 3, &command, \
                     "\n> Состояние:\n\n[1] - Оставить текущее\n[2] - Ввести состояние вручную\n[3] - Задать рандомное состояние\nВвод: ");
 
@@ -224,15 +229,19 @@ int main(int argc, const char **argv)
                         break;
                     }
                 }
-                if(command == 2)
+                if(command == 2) 
+                {
                     set_empty_state(state);
                     set_state_manually(state);
-                if (command == 3)
+                }
+                if (command == 3) 
+                {
                     set_empty_state(state);
                     HANDLE(set_random_state(state),
                         "состояние не определено",
                         "2",
                         "3");
+                }
 
                 if (verbose) print_state(state, "До алгоритма Обратного Преобразование Фурье", stdout);
                 HANDLE(QFT(state, 1),

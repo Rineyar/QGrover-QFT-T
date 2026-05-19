@@ -205,7 +205,7 @@ int print_state(State *state, const char* msg, FILE* file)
         read_amp_by_idx(state, i, &amp);
         double real = creal(amp);
         double imag = cimag(amp);
-        fprintf(file, "Amplitude %d: %g + %gi\n", i, real, imag);
+        fprintf(file, "Амплитуда %d: %g + %gi\n", i, real, imag);
     }
     fprintf(file, "\n");
     return 0;
