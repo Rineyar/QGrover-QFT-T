@@ -181,7 +181,6 @@ void set_state_manually(State *state) {
         
         set_amp_by_idx(state, amp, i);
     }
-    return 0;
 }
 
 int set_empty_state(State *state)
