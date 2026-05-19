@@ -165,10 +165,12 @@ int set_random_state(State* state)
     for(int i = 0; i < state->N; i++) 
     {
         double complex amp;
-        int e = read_amp_by_idx(state, i, &amp);
-        set_amp_by_idx(state, amp / norm_sqrt, i);
+        amp = state->amps.arr[i].amplitude;
+        state->amps.arr[i].amplitude = amp / norm_sqrt;
     }
+    return 0;
 }
+
 void set_state_manually(State *state) {
     set_empty_state(state);
     for(int i = 0; i < state->N; i++) {
@@ -179,6 +181,7 @@ void set_state_manually(State *state) {
         
         set_amp_by_idx(state, amp, i);
     }
+    return 0;
 }
 
 int set_empty_state(State *state)
@@ -208,4 +211,5 @@ int print_state(State *state, const char* msg, FILE* file)
         fprintf(file, "Amplitude %d: %g + %gi\n", i, real, imag);
     }
     fprintf(file, "\n");
+    return 0;
 }
