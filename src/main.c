@@ -196,8 +196,10 @@ int main(int argc, const char **argv)
                     }
                 }
                 if(command == 2)
+                    set_empty_state(state);
                     set_state_manually(state);
                 if (command == 3)
+                    set_empty_state(state);
                     HANDLE(set_random_state(state),
                         "состояние не определено",
                         "2",
@@ -223,8 +225,10 @@ int main(int argc, const char **argv)
                     }
                 }
                 if(command == 2)
+                    set_empty_state(state);
                     set_state_manually(state);
                 if (command == 3)
+                    set_empty_state(state);
                     HANDLE(set_random_state(state),
                         "состояние не определено",
                         "2",

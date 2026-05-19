@@ -213,7 +213,7 @@ int main(void)
     start = clock();
 
     State* state = malloc(sizeof(State));
-    for (int n = 1; n <= 5; ++n)
+    for (int n = 1; n <= 20; ++n)
     {
         int N = 2 << (n - 1);
         init_state(state, n, N); //Инициализация памяти

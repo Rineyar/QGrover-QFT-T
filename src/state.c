@@ -151,7 +151,6 @@ int set_random_state(State* state)
     if (state == NULL) {
         return -1;
     }
-    set_empty_state(state);
     // Каждая амплитуда - рандомное число типа double в диапазоне [-1, 1]
     for(int i = 0; i < state->N; i++)
     {
@@ -172,7 +171,6 @@ int set_random_state(State* state)
 }
 
 void set_state_manually(State *state) {
-    set_empty_state(state);
     for(int i = 0; i < state->N; i++) {
         printf("Введите амплитуду %d в формате: целая мнимая:", i + 1);
         double complex amp;
